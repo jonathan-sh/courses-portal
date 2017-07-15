@@ -1,6 +1,6 @@
 package com.courses.portal.security.controller;
 
-import com.courses.portal.model.dto.Response;
+import com.courses.portal.model.Response;
 import com.courses.portal.security.AppConstant;
 import com.courses.portal.security.TokenUtils;
 import com.courses.portal.security.model.AuthenticationRequest;

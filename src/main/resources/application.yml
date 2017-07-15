@@ -1,5 +1,5 @@
 server:
-    port: 4211
+    port: 4212
     compression:
       enabled: true
       mime-types: application/json,application/xml

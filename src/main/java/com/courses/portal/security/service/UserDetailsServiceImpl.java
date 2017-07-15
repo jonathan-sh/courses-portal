@@ -2,7 +2,7 @@ package com.courses.portal.security.service;
 
 
 import com.courses.portal.dao.ProviderRepository;
-import com.courses.portal.model.dto.Provider;
+import com.courses.portal.model.Provider;
 import com.courses.portal.security.model.SpringSecurityUser;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,10 +19,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        ProviderRepository providerRepository = new ProviderRepository(Provider.COLLECTION, Provider.class);
         Provider provider = null;
         try
         {
-            provider = (Provider) new ProviderRepository().findByEmail(email);
+            provider = (Provider)providerRepository.findByEmail(email);
 
         }
         catch (Exception e)

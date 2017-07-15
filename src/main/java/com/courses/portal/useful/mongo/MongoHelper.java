@@ -1,4 +1,4 @@
-package com.courses.portal.useful;
+package com.courses.portal.useful.mongo;
 
 /**
  * Created by jonathan on 7/14/17.

@@ -1,4 +1,4 @@
-package com.courses.portal.model.dto;
+package com.courses.portal.model;
 
 /**
  * Created by jonathan on 7/14/17.

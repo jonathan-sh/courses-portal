@@ -17,7 +17,7 @@ public class ReadTest {
 
     @Test
     public void readTest(){
-        List<MockData> result = new MongoCrud().readAll(MockData.COLLECTION,MockData.class);
+        List<MockData> result = new MongoCrud(MockData.COLLECTION, MockData.class).readAll();
         Boolean status = result.size() >0;
         mockData = result.get(0).treatsId();
         assertEquals(true,status.booleanValue());
