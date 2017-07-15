@@ -1,0 +1,6 @@
+server:
+    port: 4211
+    compression:
+      enabled: true
+      mime-types: application/json,application/xml
+      min-response-size: 50
