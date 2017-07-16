@@ -17,14 +17,14 @@ public class Step {
     public Boolean fieldValidationForCreation() {
 
         return this.order != null &&
-               this.name != null &&
-               this.materials != null &&
-               this.questions != null &&
-               this.exams != null &&
-               this.chances != null &&
-               this.materials.size() > 0 &&
-               this.questions.size() > 0 &&
-               this.exams.size() > 0;
+                this.name != null &&
+                this.materials != null &&
+                this.questions != null &&
+                this.exams != null &&
+                this.chances != null &&
+                this.materials.size() > 0 &&
+                this.questions.size() > 0 &&
+                this.exams.size() > 0;
 
     }
 }

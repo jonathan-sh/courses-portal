@@ -11,7 +11,7 @@ public class Encryption {
 
     private static MessageDigestPasswordEncoder getInstanceMessageDisterPassword() {
 
-        MessageDigestPasswordEncoder   digestPasswordEncoder = new MessageDigestPasswordEncoder("SHA-1");
+        MessageDigestPasswordEncoder digestPasswordEncoder = new MessageDigestPasswordEncoder("SHA-1");
 
         return digestPasswordEncoder;
 
@@ -29,7 +29,7 @@ public class Encryption {
     }
 
 
-    public  boolean isPasswordValid(String hashPassword, String password) {
+    public boolean isPasswordValid(String hashPassword, String password) {
 
         MessageDigestPasswordEncoder digestPasswordEncoder = getInstanceMessageDisterPassword();
 

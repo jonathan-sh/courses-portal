@@ -40,9 +40,12 @@ public class ProviderCtrl {
     }
 
     private ResponseEntity<Object> makeResponse() {
-        if (this.provider.validation.status) {
+        if (this.provider.validation.status)
+        {
             return new ResponseEntity<>(this.provider, this.provider.validation.HttpStatus);
-        } else {
+        }
+        else
+        {
             return new ResponseEntity<>(this.provider.validation, this.provider.validation.HttpStatus);
         }
     }

@@ -1,4 +1,5 @@
 package com.courses.portal.dao.mongoDB;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mongodb.client.FindIterable;
@@ -8,6 +9,7 @@ import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import org.bson.Document;
 import org.bson.types.ObjectId;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,7 +34,7 @@ public class MongoCrud {
             MongoConnectionFactory mongoConnectionFactory = new MongoConnectionFactory();
             mongoConnection = mongoConnectionFactory.getConetion();
             MongoCollection collection = mongoConnection.database.getCollection(this.COLLECTION);
-            return  collection;
+            return collection;
         }
         catch (Exception e)
         {
@@ -58,7 +60,7 @@ public class MongoCrud {
 
     }
 
-    public List read(Document queryFind, Document querySort, Integer limit){
+    public List read(Document queryFind, Document querySort, Integer limit) {
 
         List list = new ArrayList();
         try
@@ -99,14 +101,14 @@ public class MongoCrud {
         }
         catch (Exception e)
         {
-          //loga erro
+            //loga erro
         }
 
         mongoConnection.client.close();
         return result;
     }
 
-    public List readAll(){
+    public List readAll() {
 
         List list = new ArrayList();
         try
@@ -132,10 +134,10 @@ public class MongoCrud {
     }
 
 
-    public Boolean update(Object id, Object objectToUpdate){
+    public Boolean update(Object id, Object objectToUpdate) {
         try
         {
-            MongoCollection c =  getCollection();
+            MongoCollection c = getCollection();
             UpdateOptions updateOptions = new UpdateOptions();
             updateOptions.upsert(false);
             UpdateResult updateResult = c.updateOne(getDocumentID(id), toDocumentToUpdate(objectToUpdate), updateOptions);
@@ -144,14 +146,14 @@ public class MongoCrud {
         }
         catch (Exception e)
         {
-          //loga erro
-          mongoConnection.client.close();
-          return  false;
+            //loga erro
+            mongoConnection.client.close();
+            return false;
         }
 
     }
 
-    public Long delete(Document queryFind){
+    public Long delete(Document queryFind) {
         try
         {
             MongoCollection c = getCollection();
@@ -168,13 +170,13 @@ public class MongoCrud {
 
     }
 
-    public Boolean deleteOne(Object id){
+    public Boolean deleteOne(Object id) {
         try
         {
             MongoCollection c = getCollection();
             DeleteResult deleteResult = c.deleteOne(getDocumentID(id));
             mongoConnection.client.close();
-            return deleteResult.getDeletedCount() ==1;
+            return deleteResult.getDeletedCount() == 1;
         }
         catch (Exception e)
         {
@@ -185,30 +187,32 @@ public class MongoCrud {
 
     }
 
-    private Document getDocumentID(Object id){
-        ObjectId objectId = new ObjectId(id.toString().replace("{$oid=","").replace("}",""));
+    private Document getDocumentID(Object id) {
+        ObjectId objectId = new ObjectId(id.toString().replace("{$oid=", "").replace("}", ""));
         Document objectID = new Document();
-        objectID.put("_id",objectId);
-        return  objectID;
+        objectID.put("_id", objectId);
+        return objectID;
     }
 
-    private Document toDocument(Object object)  {
-       try {
-           Gson gson = getGson();
-           return Document.parse(gson.toJsonTree(object).toString());
-       }
-       catch (Exception e)
-       {
-           return null;
-       }
+    private Document toDocument(Object object) {
+        try
+        {
+            Gson gson = getGson();
+            return Document.parse(gson.toJsonTree(object).toString());
+        }
+        catch (Exception e)
+        {
+            return null;
+        }
     }
 
     private Gson getGson() {
-        try {
+        try
+        {
             Gson gson = new GsonBuilder()
-                                .setPrettyPrinting()
-                                .excludeFieldsWithoutExposeAnnotation()
-                                .create();
+                    .setPrettyPrinting()
+                    .excludeFieldsWithoutExposeAnnotation()
+                    .create();
             return gson;
         }
         catch (Exception e)
@@ -217,17 +221,13 @@ public class MongoCrud {
         }
     }
 
-    private Document toDocumentToUpdate(Object object){
+    private Document toDocumentToUpdate(Object object) {
         Document documentToUpdate = new Document();
         Document newData = toDocument(object);
         newData.remove("_id");
-        documentToUpdate.put("$set",newData);
+        documentToUpdate.put("$set", newData);
         return documentToUpdate;
     }
-
-
-
-
 
 
 }

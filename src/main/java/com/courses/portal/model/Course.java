@@ -1,8 +1,6 @@
 package com.courses.portal.model;
 
 import com.courses.portal.dao.CourseRepository;
-import com.courses.portal.useful.constants.CauseDescription;
-import com.courses.portal.useful.constants.DetailsDescription;
 import com.courses.portal.useful.mongo.MongoHelper;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.gson.annotations.Expose;
@@ -45,31 +43,29 @@ public class Course {
 
     public Course fieldValidationForCreation() {
         this.validation.status = this.name != null &&
-                                 this.operation != null &&
-                                 this.objective != null &&
-                                 this.hours != null &&
-                                 this.price != null &&
-                                 this.image != null &&
-                                 this.steps != null;
+                this.operation != null &&
+                this.objective != null &&
+                this.hours != null &&
+                this.price != null &&
+                this.image != null &&
+                this.steps != null;
 
         if (!this.validation.status)
         {
-            this.validation.cause = CauseDescription.FIELDS_ERROR.get();
-            this.validation.details = DetailsDescription.FIELDS_REQUIRED.get() + requirementsForCreation();
-            this.validation.HttpStatus = HttpStatus.NOT_ACCEPTABLE;
+            this.validation.fieldsError(requirementsForCreation());
         }
 
         return this;
 
     }
 
-    private String  requirementsForCreation()
-    {
+    private String requirementsForCreation() {
         return "< name, operation, objective, hours, price, image, steps >";
     }
 
-    public Course treatmentForCreate(){
-        if(validation.status){
+    public Course treatmentForCreate() {
+        if (validation.status)
+        {
             this.status = true;
             this._id = null;
         }
@@ -77,54 +73,54 @@ public class Course {
     }
 
     public Course fieldValidationUpdate() {
-        boolean premise =   this._id != null ;
+        boolean premise = this._id != null;
 
         if (!premise)
         {
-            this.validation.status = premise;
-            this.validation.cause = CauseDescription.FIELDS_ERROR.get();
-            this.validation.details = DetailsDescription.FIELDS_REQUIRED.get() + requirementsForUpdate();
+            this.validation.fieldsError(requirementsForUpdate());
         }
-        this.validation.status = premise;
 
         return this;
 
     }
 
-    private String  requirementsForUpdate()
-    {
+    private String requirementsForUpdate() {
         return "< _id >";
     }
 
-    public Course treatmentForResponse(){
-        if(this._id!=null){this._id = MongoHelper.treatsId(this._id);}
+    public Course treatmentForResponse() {
+        if (this._id != null)
+        {
+            this._id = MongoHelper.treatsId(this._id);
+        }
         return this;
     }
 
 
     @Expose(serialize = false)
-    public static final String COLLECTION ="course";
+    public static final String COLLECTION = "course";
     @Expose(serialize = false)
-    private CourseRepository courseRepository = new CourseRepository(COLLECTION,this.getClass());
-    public Course create(){
+    private CourseRepository courseRepository = new CourseRepository(COLLECTION, this.getClass());
+
+    public Course create() {
         if (validation.status)
         {
             this.validation.HttpStatus = HttpStatus.CREATED;
         }
-        return  this;
+        return this;
     }
 
-    public List<Course> readAll(){
-        List<Course> courses = (List<Course>)courseRepository.readAll();
+    public List<Course> readAll() {
+        List<Course> courses = (List<Course>) courseRepository.readAll();
         courses.forEach(Course::treatmentForResponse);
         return courses;
     }
 
-    public Course update(){
+    public Course update() {
         boolean wasUpdated = false;
         if (validation.status)
         {
-            wasUpdated = courseRepository.update(this._id,this);
+            wasUpdated = courseRepository.update(this._id, this);
             if (wasUpdated)
             {
 
@@ -143,9 +139,8 @@ public class Course {
             }
         }
 
-        return  this;
+        return this;
     }
-
 
 
 }

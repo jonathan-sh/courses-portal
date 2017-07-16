@@ -11,10 +11,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 
-
 @Service(value = "userDetailsService")
 public class UserDetailsServiceImpl implements UserDetailsService {
-
 
 
     @Override
@@ -23,7 +21,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         Provider provider = null;
         try
         {
-            provider = (Provider)providerRepository.findByEmail(email);
+            provider = (Provider) providerRepository.findByEmail(email);
 
         }
         catch (Exception e)

@@ -56,9 +56,9 @@ public class AuthenticationController {
         return ResponseEntity.ok(response);
     }
 
+
     @RequestMapping(value = "/refresh", method = RequestMethod.GET)
-    public ResponseEntity<?> authenticationRequest(HttpServletRequest request)
-    {
+    public ResponseEntity<?> authenticationRequest(HttpServletRequest request) {
         String token = request.getHeader(AppConstant.tokenHeader);
         String username = this.tokenUtils.getUsernameFromToken(token);
         SpringSecurityUser user = (SpringSecurityUser) this.userDetailsService.loadUserByUsername(username);

@@ -11,9 +11,9 @@ import static junit.framework.TestCase.assertEquals;
  */
 public class DeleteTest {
     @Test
-    public void updateTest(){
+    public void updateTest() {
         MongoCrud mongoCrud = new MongoCrud(MockData.COLLECTION, MockData.class);
-        Boolean status =  mongoCrud.deleteOne(ReadTest.mockData._id);
+        Boolean status = mongoCrud.deleteOne(ReadTest.mockData._id);
         assertEquals(true, status.booleanValue());
     }
 }

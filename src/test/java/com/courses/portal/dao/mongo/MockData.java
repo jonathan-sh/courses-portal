@@ -8,21 +8,22 @@ import org.junit.Test;
 /**
  * Created by jonathan on 7/14/17.
  */
-public class MockData{
+public class MockData {
     public static final String COLLECTION = "mock";
     public Object _id;
     public String name;
     public String password;
 
-    public MockData fillCreateData(){
-        this.name ="Alan";
-        this.password="28064212";
+    public MockData fillCreateData() {
+        this.name = "Alan";
+        this.password = "28064212";
         return this;
     }
 
-    public static final String NEW_NAME="Alan Turing";
-    public MockData fillUpdateData(){
-        this.name =NEW_NAME;
+    public static final String NEW_NAME = "Alan Turing";
+
+    public MockData fillUpdateData() {
+        this.name = NEW_NAME;
         return this;
     }
 
@@ -35,18 +36,17 @@ public class MockData{
                 '}';
     }
 
-    public MockData treatsId()
-    {
+    public MockData treatsId() {
         this._id = MongoHelper.treatsId(this._id);
         return this;
     }
 
 
     @Test
-    public void mimimi(){
+    public void mimimi() {
         Provider provider = new Provider();
         MongoCrud mongoCrud = new MongoCrud(Provider.COLLECTION, Provider.class);
-        provider.name="Jonathan";
+        provider.name = "Jonathan";
         mongoCrud.create(provider);
     }
 

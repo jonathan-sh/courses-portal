@@ -9,7 +9,7 @@ public class Question {
     @Expose
     public String header;
     @Expose
-    public String [] alternatves;
+    public String[] alternatves;
     @Expose
     public Integer correct;
     @Expose
@@ -17,12 +17,12 @@ public class Question {
     @Expose
     public Boolean status;
 
-    public  Boolean fieldValidationForCreation(){
+    public Boolean fieldValidationForCreation() {
         return this.header != null &&
-               this.alternatves != null &&
-               this.alternatves.length ==5 &&
-               this.correct != null &&
-               this.status != null ;
+                this.alternatves != null &&
+                this.alternatves.length == 5 &&
+                this.correct != null &&
+                this.status != null;
 
     }
 

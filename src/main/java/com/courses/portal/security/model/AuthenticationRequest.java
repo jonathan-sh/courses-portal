@@ -11,8 +11,7 @@ public class AuthenticationRequest {
         super();
     }
 
-    public AuthenticationRequest(String username, String password)
-    {
+    public AuthenticationRequest(String username, String password) {
         this.setUsername(username);
         this.setPassword(password);
     }

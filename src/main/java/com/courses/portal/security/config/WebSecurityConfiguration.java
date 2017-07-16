@@ -1,7 +1,6 @@
 package com.courses.portal.security.config;
 
 
-
 import com.courses.portal.security.filter.AuthenticationTokenFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;

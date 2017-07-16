@@ -17,7 +17,7 @@ public class Exam {
     @Expose
     public Boolean status;
 
-    public Boolean fieldValidationForCreation(){
+    public Boolean fieldValidationForCreation() {
         return this.name != null &&
                this.random != null;
     }

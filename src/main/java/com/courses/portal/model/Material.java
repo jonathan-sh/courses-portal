@@ -17,16 +17,13 @@ public class Material {
     @Expose
     public Boolean status;
 
-    public Boolean fieldValidationForCreation()
-    {
+    public Boolean fieldValidationForCreation() {
         return this.order != null &&
-               this.name != null &&
-               this.type != null &&
-               this.url != null &&
-               this.status != null;
+                this.name != null &&
+                this.type != null &&
+                this.url != null &&
+                this.status != null;
     }
-
-
 
 
 }

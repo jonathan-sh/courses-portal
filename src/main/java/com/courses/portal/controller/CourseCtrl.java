@@ -43,9 +43,12 @@ public class CourseCtrl {
     }
 
     private ResponseEntity<Object> makeResponse() {
-        if (this.course.validation.status) {
+        if (this.course.validation.status)
+        {
             return new ResponseEntity<>(this.course, this.course.validation.HttpStatus);
-        } else {
+        }
+        else
+        {
             return new ResponseEntity<>(this.course.validation, this.course.validation.HttpStatus);
         }
     }
