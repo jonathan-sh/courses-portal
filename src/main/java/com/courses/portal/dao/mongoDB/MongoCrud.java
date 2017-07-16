@@ -69,7 +69,6 @@ public class MongoCrud {
             Gson gson = getGson();
             for (Document document : searcheResult)
             {
-                System.out.println(document.toJson());
                 Object item = gson.fromJson(document.toJson(), CLAZZ);
                 list.add(item);
             }
@@ -77,7 +76,7 @@ public class MongoCrud {
         }
         catch (Exception e)
         {
-            System.out.println("s");
+
         }
 
         mongoConnection.client.close();

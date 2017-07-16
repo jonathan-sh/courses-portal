@@ -12,13 +12,20 @@ import com.google.gson.annotations.Expose;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import javax.sound.midi.Soundbank;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.List;
 
 /**
  * Created by jonathan on 7/11/17.
  */
 public class Provider{
+
+    public Provider() {
+        this.validation.status = false;
+        this.validation.HttpStatus = HttpStatus.MULTI_STATUS;
+    }
 
     @Expose
     public Object _id;
@@ -29,11 +36,16 @@ public class Provider{
     @Expose
     public String password;
     @Expose
-    public Integer[] birth;
+    public String description;
+    @Expose
+    public String header;
+    @Expose
+    public List<Image> images;
+    @Expose
+    public Boolean status;
     @JsonIgnore
     @Expose(serialize = false)
     public Validation validation = new Validation();
-
 
     public String BCryptEncoderPassword() {
         return new BCryptPasswordEncoder().encode(this.password);
@@ -61,24 +73,21 @@ public class Provider{
 
     private String  requirementsForCreation()
     {
-        return "< name, email, password, cnpj >";
+        return "< name, email, password >";
     }
 
     public Provider treatmentForCreate(){
         if(validation.status){
             this.password = Encryption.generateHash(this.password);
             this.email = this.email.toLowerCase();
+            this.status = true;
+            this._id = null;
         }
         return this;
     }
 
     public Provider fieldValidationUpdate() {
-        boolean premise =   this.name != null &&
-                            this.email != null &&
-                            this.password != null &&
-                            !this.name.isEmpty() &&
-                            !this.email.isEmpty() &&
-                            !this.password.isEmpty();
+        boolean premise =   this._id != null ;
 
         if (!premise)
         {
@@ -140,6 +149,32 @@ public class Provider{
             {
                 this._id = providerRepository.findByEmail(this.email)._id;
                 this.validation.HttpStatus = HttpStatus.CREATED;
+            }
+        }
+
+        return  this;
+    }
+
+    public Provider update(){
+        boolean wasUpdated = false;
+        if (validation.status)
+        {
+            wasUpdated = providerRepository.update(this._id,this);
+            if (wasUpdated)
+            {
+
+               try
+               {
+                   Provider result = (Provider) providerRepository.readOne(this._id);
+                   result.validation.HttpStatus = HttpStatus.OK;
+                   result.validation.status = wasUpdated;
+                   return result;
+               }
+               catch (Exception e)
+               {
+
+               }
+
             }
         }
 

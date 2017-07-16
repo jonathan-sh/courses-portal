@@ -19,7 +19,7 @@ public class ProviderCtrl {
     private Provider provider;
 
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity create(@RequestBody Provider provider) {
+    public ResponseEntity<Object> create(@RequestBody Provider provider) {
         this.provider = provider.fieldValidationForCreation()
                                 .treatmentForCreate()
                                 .validationOfExistence()
@@ -29,11 +29,21 @@ public class ProviderCtrl {
 
     }
 
-    private ResponseEntity makeResponse() {
+    @RequestMapping(method = RequestMethod.PUT)
+    public ResponseEntity<Object> update(@RequestBody Provider provider) {
+        this.provider = provider.fieldValidationUpdate()
+                                .treatmentForUpdate()
+                                .update()
+                                .treatmentForResponse();
+        return makeResponse();
+
+    }
+
+    private ResponseEntity<Object> makeResponse() {
         if (this.provider.validation.status) {
-            return new ResponseEntity(this.provider, this.provider.validation.HttpStatus);
+            return new ResponseEntity<>(this.provider, this.provider.validation.HttpStatus);
         } else {
-            return new ResponseEntity(this.provider.validation, this.provider.validation.HttpStatus);
+            return new ResponseEntity<>(this.provider.validation, this.provider.validation.HttpStatus);
         }
     }
 
