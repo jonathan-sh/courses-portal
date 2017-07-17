@@ -9,6 +9,8 @@ import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import org.bson.Document;
 import org.bson.types.ObjectId;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +22,7 @@ public class MongoCrud {
 
     private final String COLLECTION;
     private final Class CLAZZ;
+    private static Logger logger = LoggerFactory.getLogger(MongoCrud.class);
 
     public MongoCrud(String collection, Class clazz) {
         this.COLLECTION = collection;
@@ -38,6 +41,8 @@ public class MongoCrud {
         }
         catch (Exception e)
         {
+            logger.error("Error in getCollection()");
+            logger.error("Possible cause: " + e.getCause());
             return null;
         }
     }
@@ -52,7 +57,8 @@ public class MongoCrud {
         }
         catch (Exception e)
         {
-            //loga erro
+            logger.error("Error during create()");
+            logger.error("Possible cause: " + e.getCause());
             status = false;
         }
         mongoConnection.client.close();
@@ -78,7 +84,8 @@ public class MongoCrud {
         }
         catch (Exception e)
         {
-
+            logger.error("Error during read()");
+            logger.error("Possible cause: " + e.getCause());
         }
 
         mongoConnection.client.close();
@@ -101,7 +108,8 @@ public class MongoCrud {
         }
         catch (Exception e)
         {
-            //loga erro
+            logger.error("Error during readOne()");
+            logger.error("Possible cause: " + e.getCause());
         }
 
         mongoConnection.client.close();
@@ -126,7 +134,8 @@ public class MongoCrud {
         }
         catch (Exception e)
         {
-            //loga erro
+            logger.error("Error during readAll()");
+            logger.error("Possible cause: " + e.getCause());
         }
 
         mongoConnection.client.close();
@@ -146,7 +155,8 @@ public class MongoCrud {
         }
         catch (Exception e)
         {
-            //loga erro
+            logger.error("Error during update()");
+            logger.error("Possible cause: " + e.getCause());
             mongoConnection.client.close();
             return false;
         }
@@ -163,7 +173,8 @@ public class MongoCrud {
         }
         catch (Exception e)
         {
-            //loga erro
+            logger.error("Error during delete()");
+            logger.error("Possible cause: " + e.getCause());
             mongoConnection.client.close();
             return 0L;
         }
@@ -180,7 +191,8 @@ public class MongoCrud {
         }
         catch (Exception e)
         {
-            //loga erro
+            logger.error("Error during deleteOne()");
+            logger.error("Possible cause: " + e.getCause());
             mongoConnection.client.close();
             return false;
         }
@@ -188,9 +200,18 @@ public class MongoCrud {
     }
 
     private Document getDocumentID(Object id) {
-        ObjectId objectId = new ObjectId(id.toString().replace("{$oid=", "").replace("}", ""));
         Document objectID = new Document();
-        objectID.put("_id", objectId);
+        try
+        {
+            ObjectId objectId = new ObjectId(id.toString().replace("{$oid=", "").replace("}", ""));
+
+            objectID.put("_id", objectId);
+        }
+        catch (Exception e)
+        {
+            logger.error("Error during deleteOne()");
+            logger.error("Possible cause: " + e.getCause());
+        }
         return objectID;
     }
 
@@ -202,6 +223,8 @@ public class MongoCrud {
         }
         catch (Exception e)
         {
+            logger.error("Error during toDocument()");
+            logger.error("Possible cause: " + e.getCause());
             return null;
         }
     }
@@ -217,15 +240,25 @@ public class MongoCrud {
         }
         catch (Exception e)
         {
+            logger.error("Error during getGson()");
+            logger.error("Possible cause: " + e.getCause());
             return null;
         }
     }
 
     private Document toDocumentToUpdate(Object object) {
         Document documentToUpdate = new Document();
-        Document newData = toDocument(object);
-        newData.remove("_id");
-        documentToUpdate.put("$set", newData);
+        try
+        {
+            Document newData = toDocument(object);
+            newData.remove("_id");
+            documentToUpdate.put("$set", newData);
+        }
+        catch (Exception e)
+        {
+            logger.error("Error during toDocumentToUpdate()");
+            logger.error("Possible cause: " + e.getCause());
+        }
         return documentToUpdate;
     }
 

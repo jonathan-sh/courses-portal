@@ -4,6 +4,8 @@ import com.courses.portal.dao.CourseRepository;
 import com.courses.portal.useful.mongo.MongoHelper;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.gson.annotations.Expose;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 
 import java.util.List;
@@ -12,6 +14,8 @@ import java.util.List;
  * Created by jonathan on 7/15/17.
  */
 public class Course {
+
+    private static Logger logger = LoggerFactory.getLogger(Course.class);
 
     public Course() {
         this.validation.status = false;
@@ -133,7 +137,8 @@ public class Course {
                 }
                 catch (Exception e)
                 {
-
+                    logger.error("Error during cast to Course");
+                    logger.error("Possible cause: " + e.getCause());
                 }
 
             }

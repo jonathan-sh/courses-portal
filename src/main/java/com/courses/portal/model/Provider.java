@@ -6,6 +6,8 @@ import com.courses.portal.useful.constants.DetailsDescription;
 import com.courses.portal.useful.mongo.MongoHelper;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.gson.annotations.Expose;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
@@ -20,6 +22,8 @@ public class Provider {
         this.validation.status = false;
         this.validation.HttpStatus = HttpStatus.MULTI_STATUS;
     }
+
+    private static Logger logger = LoggerFactory.getLogger(Provider.class);
 
     @Expose
     public Object _id;
@@ -161,7 +165,8 @@ public class Provider {
                 }
                 catch (Exception e)
                 {
-
+                    logger.error("Error during cast to Provider");
+                    logger.error("Possible cause: " + e.getCause());
                 }
 
             }

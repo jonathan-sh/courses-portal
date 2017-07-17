@@ -6,6 +6,8 @@ import com.courses.portal.useful.constants.DetailsDescription;
 import com.courses.portal.useful.mongo.MongoHelper;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.gson.annotations.Expose;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
@@ -13,6 +15,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
  * Created by jonathan on 7/16/17.
  */
 public class Student {
+
+    private static Logger logger = LoggerFactory.getLogger(Student.class);
+
     @Expose
     public Object _id;
     @Expose
@@ -164,6 +169,8 @@ public class Student {
                 catch (Exception e)
                 {
 
+                    logger.error("Error during cast to Student");
+                    logger.error("Possible cause: " + e.getCause());
                 }
 
             }

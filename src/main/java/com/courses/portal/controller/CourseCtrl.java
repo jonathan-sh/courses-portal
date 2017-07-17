@@ -1,6 +1,8 @@
 package com.courses.portal.controller;
 
 import com.courses.portal.model.Course;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,9 +18,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class CourseCtrl {
 
     private Course course = new Course();
+    private static Logger logger = LoggerFactory.getLogger(CourseCtrl.class);
 
     @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity<Object> readAll() {
+        logger.error("Error do Gordin");
         return new ResponseEntity<>(course.readAll(), HttpStatus.OK);
 
     }
