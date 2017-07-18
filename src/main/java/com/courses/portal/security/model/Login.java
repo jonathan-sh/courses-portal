@@ -2,16 +2,16 @@ package com.courses.portal.security.model;
 
 import com.courses.portal.security.Encryption;
 
-public class AuthenticationRequest {
+public class Login {
 
     private String username;
     private String password;
 
-    public AuthenticationRequest() {
+    public Login() {
         super();
     }
 
-    public AuthenticationRequest(String username, String password) {
+    public Login(String username, String password) {
         this.setUsername(username);
         this.setPassword(password);
     }

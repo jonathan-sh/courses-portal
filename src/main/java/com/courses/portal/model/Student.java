@@ -48,11 +48,11 @@ public class Student {
 
     public Student fieldValidationForCreation() {
         this.validation.status = this.name != null &&
-                this.email != null &&
-                this.password != null &&
-                !this.name.isEmpty() &&
-                !this.email.isEmpty() &&
-                !this.password.isEmpty();
+                                 this.email != null &&
+                                 this.password != null &&
+                                 !this.name.isEmpty() &&
+                                 !this.email.isEmpty() &&
+                                 !this.password.isEmpty();
 
         if (!this.validation.status)
         {
@@ -132,7 +132,7 @@ public class Student {
 
 
     @Expose(serialize = false)
-    public static final String COLLECTION = "provider";
+    public static final String COLLECTION = "student";
     @Expose(serialize = false)
     private StudentRepository studentRepository = new StudentRepository(COLLECTION, this.getClass());
 
@@ -144,7 +144,7 @@ public class Student {
             if (wasCreated)
             {
                 this._id = studentRepository.findByEmail(this.email)._id;
-                this.validation.HttpStatus = HttpStatus.CREATED;
+                this.validation.httpStatus = HttpStatus.CREATED;
             }
         }
 
@@ -162,7 +162,7 @@ public class Student {
                 try
                 {
                     Student result = (Student) studentRepository.readOne(this._id);
-                    result.validation.HttpStatus = HttpStatus.OK;
+                    result.validation.httpStatus = HttpStatus.OK;
                     result.validation.status = wasUpdated;
                     return result;
                 }
@@ -179,5 +179,9 @@ public class Student {
         return this;
     }
 
+    public boolean isValid() {
+        fieldValidationForCreation();
+        return this.validation.status && this.status;
+    }
 }
 

@@ -20,7 +20,7 @@ public class Provider {
 
     public Provider() {
         this.validation.status = false;
-        this.validation.HttpStatus = HttpStatus.MULTI_STATUS;
+        this.validation.httpStatus = HttpStatus.MULTI_STATUS;
     }
 
     private static Logger logger = LoggerFactory.getLogger(Provider.class);
@@ -141,7 +141,7 @@ public class Provider {
             if (wasCreated)
             {
                 this._id = providerRepository.findByEmail(this.email)._id;
-                this.validation.HttpStatus = HttpStatus.CREATED;
+                this.validation.httpStatus = HttpStatus.CREATED;
             }
         }
 
@@ -159,7 +159,7 @@ public class Provider {
                 try
                 {
                     Provider result = (Provider) providerRepository.readOne(this._id);
-                    result.validation.HttpStatus = HttpStatus.OK;
+                    result.validation.httpStatus = HttpStatus.OK;
                     result.validation.status = wasUpdated;
                     return result;
                 }
@@ -175,4 +175,8 @@ public class Provider {
         return this;
     }
 
+    public boolean isValid() {
+        fieldValidationForCreation();
+        return this.validation.status && this.status;
+    }
 }

@@ -19,7 +19,7 @@ public class Course {
 
     public Course() {
         this.validation.status = false;
-        this.validation.HttpStatus = HttpStatus.MULTI_STATUS;
+        this.validation.httpStatus = HttpStatus.MULTI_STATUS;
     }
 
     @Expose
@@ -109,7 +109,7 @@ public class Course {
     public Course create() {
         if (validation.status)
         {
-            this.validation.HttpStatus = HttpStatus.CREATED;
+            this.validation.httpStatus = HttpStatus.CREATED;
         }
         return this;
     }
@@ -131,7 +131,7 @@ public class Course {
                 try
                 {
                     Course result = (Course) courseRepository.readOne(this._id);
-                    result.validation.HttpStatus = HttpStatus.OK;
+                    result.validation.httpStatus = HttpStatus.OK;
                     result.validation.status = wasUpdated;
                     return result;
                 }

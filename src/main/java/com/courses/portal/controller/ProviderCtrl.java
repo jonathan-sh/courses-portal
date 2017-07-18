@@ -42,11 +42,11 @@ public class ProviderCtrl {
     private ResponseEntity<Object> makeResponse() {
         if (this.provider.validation.status)
         {
-            return new ResponseEntity<>(this.provider, this.provider.validation.HttpStatus);
+            return new ResponseEntity<>(this.provider, this.provider.validation.httpStatus);
         }
         else
         {
-            return new ResponseEntity<>(this.provider.validation, this.provider.validation.HttpStatus);
+            return new ResponseEntity<>(this.provider.validation, this.provider.validation.httpStatus);
         }
     }
 

@@ -1,11 +1,13 @@
 package com.courses.portal.security.controller;
 
-import com.courses.portal.model.Response;
+
 import com.courses.portal.security.AppConstant;
 import com.courses.portal.security.TokenUtils;
-import com.courses.portal.security.model.AuthenticationRequest;
+import com.courses.portal.security.model.Login;
 import com.courses.portal.security.model.AuthenticationResponse;
 import com.courses.portal.security.model.SpringSecurityUser;
+import com.courses.portal.security.service.UserDetailsServiceImpl;
+import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -22,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 
+
 @RestController
 @RequestMapping("/login")
 public class AuthenticationController {
@@ -36,25 +39,23 @@ public class AuthenticationController {
     private UserDetailsService userDetailsService;
 
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity<?> authenticationRequest(@RequestBody AuthenticationRequest authenticationRequest)
+    public ResponseEntity<?> authenticationRequest(@RequestBody Login login)
             throws AuthenticationException {
 
-        Authentication authentication = this.authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        authenticationRequest.getUsername(),
-                        authenticationRequest.getPassword()
-                )
-        );
+        Authentication authentication =
+                this.authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(login.getUsername(), login.getPassword()));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        UserDetails userDetails = this.userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
-        Response response = new Response();
-        response.token = this.tokenUtils.generateToken(userDetails);
+        UserDetails userDetails = this.userDetailsService.loadUserByUsername(login.getUsername());
+        Document token = new Document();
+        token.put("token",this.tokenUtils.generateToken(userDetails));
 
-
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(token);
     }
+
+
 
 
     @RequestMapping(value = "/refresh", method = RequestMethod.GET)
