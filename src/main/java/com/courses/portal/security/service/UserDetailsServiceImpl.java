@@ -5,6 +5,9 @@ import com.courses.portal.dao.ProviderRepository;
 import com.courses.portal.dao.StudentRepository;
 import com.courses.portal.model.Provider;
 import com.courses.portal.model.Student;
+import com.courses.portal.security.constants.AppConstant;
+import com.courses.portal.security.constants.Entity;
+import com.courses.portal.security.model.Login;
 import com.courses.portal.security.model.SpringSecurityUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,12 +57,12 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         SpringSecurityUser springSecurityUser = null;
         switch (entity)
         {
-            case "provider":
+            case Entity.PROVIDER:
                 Provider provider = this.providerRepository.findByEmail(email);
                 if (provider != null && provider.isValid())
                 {
                     springSecurityUser = new SpringSecurityUser(provider._id,
-                                         provider.email,
+                                         provider.email+AppConstant.REGEX+Entity.PROVIDER,
                                          provider.BCryptEncoderPassword(),
                                          provider.name,
                                          null,
@@ -68,12 +71,12 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 }
 
                 break;
-            case "student":
+            case Entity.STUDENT:
                 Student student = this.studentRepository.findByEmail(email);
                 if (student!=null && student.isValid())
                 {
                     springSecurityUser = new SpringSecurityUser(student._id,
-                                         student.email,
+                                         student.email+AppConstant.REGEX+Entity.STUDENT,
                                          student.BCryptEncoderPassword(),
                                          student.name,
                                          null,
@@ -86,10 +89,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         return springSecurityUser;
     }
 
-    public static String REGEX = ":::";
+
 
     private void splitEndValidationOfEmailEntity(String emailEndEntity) {
-        String[] emailEntity = emailEndEntity.split(this.REGEX);
+        String[] emailEntity = emailEndEntity.split(AppConstant.REGEX);
         this.isValidRequest = emailEntity.length == 2;
         if (this.isValidRequest)
         {

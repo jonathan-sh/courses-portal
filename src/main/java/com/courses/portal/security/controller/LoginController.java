@@ -1,12 +1,10 @@
 package com.courses.portal.security.controller;
 
 
-import com.courses.portal.security.AppConstant;
+import com.courses.portal.security.constants.AppConstant;
 import com.courses.portal.security.TokenUtils;
 import com.courses.portal.security.model.Login;
-import com.courses.portal.security.model.AuthenticationResponse;
 import com.courses.portal.security.model.SpringSecurityUser;
-import com.courses.portal.security.service.UserDetailsServiceImpl;
 import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -27,7 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/login")
-public class AuthenticationController {
+public class LoginController {
 
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -42,37 +40,54 @@ public class AuthenticationController {
     public ResponseEntity<?> authenticationRequest(@RequestBody Login login)
             throws AuthenticationException {
 
-        Authentication authentication =
-                this.authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(login.getUsername(), login.getPassword()));
+        Authentication authentication = getAuthenticate(login);
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        UserDetails userDetails = this.userDetailsService.loadUserByUsername(login.getUsername());
-        Document token = new Document();
-        token.put("token",this.tokenUtils.generateToken(userDetails));
-
-        return ResponseEntity.ok(token);
+        return ResponseEntity.ok(getDocumentToken(login));
     }
-
-
-
 
     @RequestMapping(value = "/refresh", method = RequestMethod.GET)
     public ResponseEntity<?> authenticationRequest(HttpServletRequest request) {
-        String token = request.getHeader(AppConstant.tokenHeader);
+        String token = request.getHeader(AppConstant.TOKEN_HEADER);
         String username = this.tokenUtils.getUsernameFromToken(token);
-        SpringSecurityUser user = (SpringSecurityUser) this.userDetailsService.loadUserByUsername(username);
+        SpringSecurityUser user = (SpringSecurityUser) getUserDetails(username);
 
-        if (this.tokenUtils.canTokenBeRefreshed(token, user.getLastPasswordReset()))
+        if (checkIfCanTokenBeRefreshed(token, user))
         {
-            String refreshedToken = this.tokenUtils.refreshToken(token);
-            return ResponseEntity.ok(new AuthenticationResponse(refreshedToken));
+            return ResponseEntity.ok(getDocumentRefreshToken(token));
         }
         else
         {
             return ResponseEntity.badRequest().body(null);
         }
+    }
+
+    private Boolean checkIfCanTokenBeRefreshed(String token, SpringSecurityUser user) {
+        return this.tokenUtils.canTokenBeRefreshed(token, user.getLastPasswordReset());
+    }
+
+
+    private UserDetails getUserDetails(String userNameSpring) {
+        return this.userDetailsService.loadUserByUsername(userNameSpring);
+    }
+
+    private Authentication getAuthenticate(Login login) {
+        System.out.println(login.getUserNameSpring());
+        return this.authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(login.getUserNameSpring(), login.getPassword()));
+    }
+
+    private Document getDocumentToken(Login login) {
+        Document token = new Document();
+        token.put("token", this.tokenUtils.generateToken(login));
+        return token;
+    }
+
+    private Document getDocumentRefreshToken(String token) {
+        Document refreshedToken = new Document();
+        refreshedToken.put("token", this.tokenUtils.refreshToken(token));
+        return refreshedToken;
     }
 
 }

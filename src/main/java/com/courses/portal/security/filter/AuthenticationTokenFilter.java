@@ -1,6 +1,6 @@
 package com.courses.portal.security.filter;
 
-import com.courses.portal.security.AppConstant;
+import com.courses.portal.security.constants.AppConstant;
 import com.courses.portal.security.TokenUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -41,11 +41,11 @@ public class AuthenticationTokenFilter extends UsernamePasswordAuthenticationFil
         resp.setHeader("Access-Control-Allow-Origin", "*");
         resp.setHeader("Access-Control-Allow-Methods", "POST, GET, PUT, OPTIONS, DELETE, PATCH");
         resp.setHeader("Access-Control-Max-Age", "3600");
-        resp.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Accept-Encoding, Content-Encoding, " + AppConstant.tokenHeader);
+        resp.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Accept-Encoding, Content-Encoding, " + AppConstant.TOKEN_HEADER);
 
 
         HttpServletRequest httpRequest = (HttpServletRequest) request;
-        String authToken = httpRequest.getHeader(AppConstant.tokenHeader);
+        String authToken = httpRequest.getHeader(AppConstant.TOKEN_HEADER);
         String username = this.tokenUtils.getUsernameFromToken(authToken);
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null)
