@@ -47,12 +47,12 @@ public class Course {
 
     public Course fieldValidationForCreation() {
         this.validation.status = this.name != null &&
-                this.operation != null &&
-                this.objective != null &&
-                this.hours != null &&
-                this.price != null &&
-                this.image != null &&
-                this.steps != null;
+                                 this.operation != null &&
+                                 this.objective != null &&
+                                 this.hours != null &&
+                                 this.price != null &&
+                                 this.image != null &&
+                                 this.steps != null;
 
         if (!this.validation.status)
         {

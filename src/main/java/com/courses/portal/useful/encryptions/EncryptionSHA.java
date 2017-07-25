@@ -1,11 +1,11 @@
-package com.courses.portal.security;
+package com.courses.portal.useful.encryptions;
 
 import org.springframework.security.authentication.encoding.MessageDigestPasswordEncoder;
 
 /**
  * Created by jonathan on 3/19/17.
  */
-public class Encryption {
+public class EncryptionSHA {
 
     private static Object salt;
 

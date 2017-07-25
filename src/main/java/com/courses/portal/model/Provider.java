@@ -1,7 +1,7 @@
 package com.courses.portal.model;
 
 import com.courses.portal.dao.ProviderRepository;
-import com.courses.portal.security.Encryption;
+import com.courses.portal.useful.encryptions.EncryptionSHA;
 import com.courses.portal.useful.constants.DetailsDescription;
 import com.courses.portal.useful.mongo.MongoHelper;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -73,7 +73,7 @@ public class Provider {
     public Provider treatmentForCreate() {
         if (validation.status)
         {
-            this.password = Encryption.generateHash(this.password);
+            this.password = EncryptionSHA.generateHash(this.password);
             this.email = this.email.toLowerCase();
             this.status = true;
             this._id = null;
@@ -98,7 +98,7 @@ public class Provider {
         this.email = null;
         if (this.password != null)
         {
-            this.password = Encryption.generateHash(this.password);
+            this.password = EncryptionSHA.generateHash(this.password);
         }
         return this;
     }
@@ -149,13 +149,13 @@ public class Provider {
     }
 
     public Provider update() {
+        this._id = MongoHelper.treatsId(this._id);
         boolean wasUpdated = false;
         if (validation.status)
         {
             wasUpdated = providerRepository.update(this._id, this);
             if (wasUpdated)
             {
-
                 try
                 {
                     Provider result = (Provider) providerRepository.readOne(this._id);

@@ -1,7 +1,7 @@
 package com.courses.portal.model;
 
 import com.courses.portal.dao.StudentRepository;
-import com.courses.portal.security.Encryption;
+import com.courses.portal.useful.encryptions.EncryptionSHA;
 import com.courses.portal.useful.constants.DetailsDescription;
 import com.courses.portal.useful.mongo.MongoHelper;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -70,7 +70,7 @@ public class Student {
         if (validation.status)
         {
             this.email = this.email.toLowerCase();
-            this.password = Encryption.generateHash(this.password);
+            this.password = EncryptionSHA.generateHash(this.password);
             this.status = true;
             this._id = null;
         }
@@ -99,7 +99,7 @@ public class Student {
         this.email = null;
         if (this.password != null)
         {
-            this.password = Encryption.generateHash(this.password);
+            this.password = EncryptionSHA.generateHash(this.password);
         }
         return this;
     }
@@ -153,6 +153,7 @@ public class Student {
 
     public Student update() {
         boolean wasUpdated = false;
+        this._id = MongoHelper.treatsId(this._id);
         if (validation.status)
         {
             wasUpdated = studentRepository.update(this._id, this);

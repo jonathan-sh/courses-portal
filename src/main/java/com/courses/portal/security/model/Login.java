@@ -1,16 +1,38 @@
 package com.courses.portal.security.model;
 
-import com.courses.portal.security.Encryption;
+import com.courses.portal.dao.ProviderRepository;
+import com.courses.portal.dao.StudentRepository;
+import com.courses.portal.model.Provider;
+import com.courses.portal.model.Student;
+import com.courses.portal.model.Validation;
+import com.courses.portal.useful.constants.CauseDescription;
+import com.courses.portal.useful.encryptions.EncryptionSHA;
 import com.courses.portal.security.constants.AppConstant;
+import com.courses.portal.security.constants.Entity;
+import com.courses.portal.useful.constants.DetailsDescription;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.google.gson.annotations.Expose;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.LocalDateTime;
+
 public class Login {
     private static Logger logger = LoggerFactory.getLogger(Login.class);
-    private String userNameSpring;
-    private String email;
+
+    @JsonIgnore
+    private String oldPassword;
     private String password;
+    private String email;
     private String entity;
+    @JsonIgnore
+    @Expose(serialize = false)
+    public Validation validation = new Validation();
+    @JsonIgnore
+    public String generatedPassword;
+    @JsonIgnore
+    public String _id;
+    public String url;
 
 
     public Login() {
@@ -23,6 +45,21 @@ public class Login {
         this.setEntity(entity);
     }
 
+
+    private void setEmail(String email) {
+        this.email = email;
+    }
+
+    private void setPassword(String password) {
+        this.password = EncryptionSHA.generateHash(password);
+    }
+
+    private void setEntity(String entity) {
+        this.entity = entity;
+    }
+
+
+    @JsonIgnore
     public String getUserNameSpring() {
         if (!isValid())
         {
@@ -31,40 +68,166 @@ public class Login {
         return this.email + AppConstant.REGEX + this.entity;
     }
 
-    public void setUserNameSpring(String userNameSpring) {
-        this.userNameSpring = userNameSpring;
-    }
 
     public String getEmail() {
         return email;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
 
+    @JsonIgnore
     public String getPassword() {
         return password;
     }
 
-    private void setPassword(String password) {
-        this.password = Encryption.generateHash(password);
+    private boolean isValid() {
+        return this.email != null &&
+                this.password != null &&
+                this.entity != null &&
+                !this.email.isEmpty() &&
+                !this.password.isEmpty() &&
+                !this.entity.isEmpty();
     }
 
-    public String getEntity() {
-       return this.entity;
+
+    public Login validForForgotPassword() {
+        this.validation.status = this.email != null &&
+                                 this.entity != null &&
+                                 !this.email.isEmpty() &&
+                                 !this.entity.isEmpty();
+
+        if (!validation.status)
+        {
+            validation.fieldsError(requirements());
+        }
+        return this;
     }
 
-    private void setEntity(String entity) {
-        this.entity = entity;
+    private String requirements() {
+        return "< email, entity >";
     }
 
-    private boolean isValid(){
-       return this.email !=null &&
-              this.password != null &&
-              this.entity != null &&
-              !this.email.isEmpty() &&
-              !this.password.isEmpty() &&
-              !this.entity.isEmpty();
+    private static ProviderRepository providerRepository = new ProviderRepository(Provider.COLLECTION, Provider.class);
+    private static StudentRepository studentRepository = new StudentRepository(Student.COLLECTION, Student.class);
+
+    public Login makeForgotPassword() {
+        this.generatedPassword = EncryptionSHA.generateHash(LocalDateTime.now().toString());
+        if (validation.status)
+        {
+            switch (entity)
+            {
+                case Entity.PROVIDER:
+                    Provider provider = providerRepository.findByEmail(email);
+                    if (provider != null)
+                    {
+                        provider.password = generatedPassword;
+                        provider.validation.status = true;
+                        provider.treatmentForUpdate()
+                                .update();
+                        this._id = provider._id.toString();
+                    }
+                    else
+                    {
+                        makeNotFound();
+                    }
+
+                    break;
+                case Entity.STUDENT:
+                    Student student = studentRepository.findByEmail(email);
+                    if (student != null)
+                    {
+                        student.password = generatedPassword;
+                        student.validation.status = true;
+                        student.treatmentForUpdate()
+                               .update();
+                        this._id = student._id.toString();
+                    }
+                    else
+                    {
+                        makeNotFound();
+                    }
+
+                    break;
+                default:
+                    validation.noContains(DetailsDescription.NOT_CONTAINS_ENTITY.get());
+                    break;
+            }
+
+        }
+        return this;
+    }
+
+
+    private void makeNotFound() {
+        validation.notFound(email);
+    }
+
+    public Login genereteUrlForResetUpdade() {
+        if (validAfterMakeUrl())
+        {
+            this.url = this.email + "/" + this.generatedPassword;
+        }
+        return this;
+    }
+
+    private boolean validAfterMakeUrl() {
+        return this._id != null &&
+                this.generatedPassword != null &&
+                !this._id.isEmpty() &&
+                !this.generatedPassword.isEmpty();
+    }
+
+
+    public Login validationForPasswordUpdade(String email, String password) {
+        this.email = email;
+        this.oldPassword = password;
+        this.validation.status = this.password != null &&
+                                 this.entity != null &&
+                                 this.oldPassword != null &&
+                                 this.email != null &&
+                                 !this.password.isEmpty() &&
+                                 !this.entity.isEmpty() &&
+                                 !this.oldPassword.isEmpty() &&
+                                 !this.email.isEmpty();
+
+        if (! this.validation.status){throw new RuntimeException(CauseDescription.ERROR_DATA.get());}
+        return this;
+    }
+
+    public Login makePasswordUpdade() {
+        if (validation.status)
+        {
+            switch (entity)
+            {
+                case Entity.PROVIDER:
+                    Provider provider = providerRepository.findByEmail(email);
+                    if (provider != null && validationOfOldPassword(provider.password))
+                    {
+                        provider.password = this.password;
+                        provider.validation.status = true;
+                        provider.treatmentForUpdate()
+                                .update();
+                    }
+                    break;
+                case Entity.STUDENT:
+                    Student student = studentRepository.findByEmail(email);
+                    if (student != null && validationOfOldPassword(student.password))
+                    {
+                        student.password = this.password;
+                        student.validation.status = true;
+                        student.treatmentForUpdate()
+                                .update();
+                    }
+                    break;
+                default:
+                    validation.noContains(DetailsDescription.NOT_CONTAINS_ENTITY.get());
+                    break;
+            }
+
+        }
+        return this;
+    }
+
+    private boolean validationOfOldPassword(String password) {
+        return this.oldPassword.equals(password);
     }
 }

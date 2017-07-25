@@ -29,4 +29,18 @@ public class Validation {
         this.httpStatus = httpStatus.NOT_ACCEPTABLE;
     }
 
+    public void notFound(String email) {
+        this.status = false;
+        this.cause = CauseDescription.NOT_FOUND.get();
+        this.details = DetailsDescription.NOT_FOUND.get() + email;
+        this.httpStatus = httpStatus.NOT_FOUND;
+    }
+
+    public void noContains(String details) {
+        this.status = false;
+        this.cause = CauseDescription.NOT_CONTAINS.get();
+        this.details = (details != null && !details.isEmpty())? details : "-";
+        this.httpStatus = httpStatus.NOT_ACCEPTABLE;
+    }
+
 }

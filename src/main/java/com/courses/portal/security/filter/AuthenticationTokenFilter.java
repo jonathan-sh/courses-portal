@@ -43,7 +43,6 @@ public class AuthenticationTokenFilter extends UsernamePasswordAuthenticationFil
         resp.setHeader("Access-Control-Max-Age", "3600");
         resp.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Accept-Encoding, Content-Encoding, " + AppConstant.TOKEN_HEADER);
 
-
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         String authToken = httpRequest.getHeader(AppConstant.TOKEN_HEADER);
         String username = this.tokenUtils.getUsernameFromToken(authToken);

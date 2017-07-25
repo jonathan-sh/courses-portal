@@ -18,12 +18,14 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.web.filter.CorsFilter;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @EnableTransactionManagement
-public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
+public class WebSecurity extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private UserDetailsService userDetailsService;
@@ -53,6 +55,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     }
 
 
+
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
@@ -66,10 +69,13 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers(HttpMethod.GET, "/refresh/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/login/**").permitAll()
                 .antMatchers(HttpMethod.POST, "/refresh/**").permitAll()
                 .antMatchers(HttpMethod.POST, "/login/**").permitAll()
                 .antMatchers(HttpMethod.POST, "/provider/**").permitAll()
                 .antMatchers(HttpMethod.POST, "/student/**").permitAll()
+                .antMatchers(HttpMethod.POST, "/forgot-password/**").permitAll()
+                .antMatchers(HttpMethod.PUT, "/forgot-password/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .exceptionHandling();

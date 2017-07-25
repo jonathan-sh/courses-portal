@@ -48,7 +48,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     }
 
 
-    private static ProviderRepository providerRepository = new ProviderRepository(Provider.COLLECTION, Provider.class);
+    private static ProviderRepository providerRepository  = new ProviderRepository(Provider.COLLECTION, Provider.class);
     private static StudentRepository studentRepository = new StudentRepository(Student.COLLECTION, Student.class);
     private String email;
     private String entity;

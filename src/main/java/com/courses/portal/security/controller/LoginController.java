@@ -7,6 +7,7 @@ import com.courses.portal.security.model.Login;
 import com.courses.portal.security.model.SpringSecurityUser;
 import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -15,10 +16,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -53,14 +51,18 @@ public class LoginController {
         String username = this.tokenUtils.getUsernameFromToken(token);
         SpringSecurityUser user = (SpringSecurityUser) getUserDetails(username);
 
+
         if (checkIfCanTokenBeRefreshed(token, user))
         {
+
             return ResponseEntity.ok(getDocumentRefreshToken(token));
         }
         else
         {
             return ResponseEntity.badRequest().body(null);
         }
+
+
     }
 
     private Boolean checkIfCanTokenBeRefreshed(String token, SpringSecurityUser user) {
