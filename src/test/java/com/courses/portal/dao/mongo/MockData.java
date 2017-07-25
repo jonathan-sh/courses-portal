@@ -1,22 +1,24 @@
 package com.courses.portal.dao.mongo;
 
-import com.courses.portal.dao.mongoDB.MongoCrud;
-import com.courses.portal.model.Provider;
+import com.courses.portal.useful.encryptions.EncryptionSHA;
 import com.courses.portal.useful.mongo.MongoHelper;
-import org.junit.Test;
+import com.google.gson.annotations.Expose;
 
 /**
  * Created by jonathan on 7/14/17.
  */
 public class MockData {
     public static final String COLLECTION = "mock";
+    @Expose
     public Object _id;
+    @Expose
     public String name;
+    @Expose
     public String password;
 
     public MockData fillCreateData() {
         this.name = "Alan";
-        this.password = "28064212";
+        this.password = EncryptionSHA.generateHash("28064212");
         return this;
     }
 
@@ -40,14 +42,4 @@ public class MockData {
         this._id = MongoHelper.treatsId(this._id);
         return this;
     }
-
-
-    @Test
-    public void mimimi() {
-        Provider provider = new Provider();
-        MongoCrud mongoCrud = new MongoCrud(Provider.COLLECTION, Provider.class);
-        provider.name = "Jonathan";
-        mongoCrud.create(provider);
-    }
-
 }

@@ -15,13 +15,7 @@ public class CreateTest {
     @Test
     public void createTest() {
         MongoCrud mongoCrud = new MongoCrud(MockData.COLLECTION, MockData.class);
-        // Boolean status = mongoCrud.create(MockData.COLLECTION,new MockData().fillCreateData());
-        Provider provider = new Provider();
-        provider.name = "alan";
-        provider.email = "alan@turing.com";
-        provider.password = EncryptionSHA.generateHash("123456");
-        Boolean status = mongoCrud.create(provider);
-
+        Boolean status = mongoCrud.create(new MockData().fillCreateData());
         assertEquals(true, status.booleanValue());
     }
 
