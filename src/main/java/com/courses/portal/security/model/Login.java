@@ -20,17 +20,13 @@ import java.time.LocalDateTime;
 public class Login {
     private static Logger logger = LoggerFactory.getLogger(Login.class);
 
-    @JsonIgnore
     private String oldPassword;
     private String password;
     private String email;
     private String entity;
-    @JsonIgnore
-    @Expose(serialize = false)
+
     public Validation validation = new Validation();
-    @JsonIgnore
     public String generatedPassword;
-    @JsonIgnore
     public String _id;
     public String url;
 
@@ -59,7 +55,6 @@ public class Login {
     }
 
 
-    @JsonIgnore
     public String getUserNameSpring() {
         if (!isValid())
         {
@@ -74,7 +69,7 @@ public class Login {
     }
 
 
-    @JsonIgnore
+
     public String getPassword() {
         return password;
     }
