@@ -28,7 +28,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String emailEndEntity) throws UsernameNotFoundException {
 
-
         splitEndValidationOfEmailEntity(emailEndEntity);
 
         if (isValidRequest)
