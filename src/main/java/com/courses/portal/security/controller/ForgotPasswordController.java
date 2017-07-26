@@ -1,6 +1,7 @@
 package com.courses.portal.security.controller;
 
 import com.courses.portal.security.model.Login;
+import org.bson.Document;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,37 +13,42 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/forgot-password")
 public class ForgotPasswordController {
 
-    private Login login;
-
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<?> forgot(@RequestBody Login login){
 
-        this.login = login.validForForgotPassword()
-                          .makeForgotPassword()
-                          .genereteUrlForResetUpdade();
+       login.validForForgotPassword()
+            .makeForgotPassword()
+            .genereteUrlForResetUpdade();
 
-        return makeResponse();
+        if (login.validation.status)
+        {
+            //send email
+            return new ResponseEntity<>(login, HttpStatus.OK);
+        }
+
+        return responseValidation(login);
     }
 
-    private ResponseEntity<Object> makeResponse() {
-        if (this.login.validation.status)
-        {
-            return new ResponseEntity<>(this.login, HttpStatus.OK);
-        }
-        else
-        {
-            return new ResponseEntity<>(this.login.validation, this.login.validation.httpStatus);
-        }
-    }
 
-    @RequestMapping(path = "/{email}/{password}", method = RequestMethod.PUT)
+    @RequestMapping(path = "/{id}/{password}", method = RequestMethod.PUT)
     public ResponseEntity<?> update(@RequestBody Login login,
-                                    @PathVariable String email,
+                                    @PathVariable String id,
                                     @PathVariable String password)
     {
-        login.validationForPasswordUpdade(email,password)
+        login.validationForPasswordUpdade(id,password)
              .makePasswordUpdade();
-        return makeResponse();
+
+        if (login.validation.status)
+        {
+            return new ResponseEntity<>(login.validation.status, HttpStatus.OK);
+        }
+
+        return responseValidation(login);
+
+    }
+
+    private ResponseEntity<?> responseValidation(Login login) {
+        return new ResponseEntity<>(login.validation,login.validation.httpStatus);
     }
 
 

@@ -5,13 +5,10 @@ import com.courses.portal.dao.StudentRepository;
 import com.courses.portal.model.Provider;
 import com.courses.portal.model.Student;
 import com.courses.portal.model.Validation;
-import com.courses.portal.useful.constants.CauseDescription;
-import com.courses.portal.useful.encryptions.EncryptionSHA;
 import com.courses.portal.security.constants.AppConstant;
 import com.courses.portal.security.constants.Entity;
 import com.courses.portal.useful.constants.DetailsDescription;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.google.gson.annotations.Expose;
+import com.courses.portal.useful.encryptions.EncryptionSHA;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,9 +19,9 @@ public class Login {
 
     private String oldPassword;
     private String password;
+    private String newPassword;
     private String email;
     private String entity;
-
     public Validation validation = new Validation();
     public String generatedPassword;
     public String _id;
@@ -41,19 +38,18 @@ public class Login {
         this.setEntity(entity);
     }
 
-
     private void setEmail(String email) {
         this.email = email;
     }
 
     private void setPassword(String password) {
+        this.newPassword = password;
         this.password = EncryptionSHA.generateHash(password);
     }
 
     private void setEntity(String entity) {
         this.entity = entity;
     }
-
 
     public String getUserNameSpring() {
         if (!isValid())
@@ -63,12 +59,9 @@ public class Login {
         return this.email + AppConstant.REGEX + this.entity;
     }
 
-
     public String getEmail() {
         return email;
     }
-
-
 
     public String getPassword() {
         return password;
@@ -83,12 +76,11 @@ public class Login {
                 !this.entity.isEmpty();
     }
 
-
     public Login validForForgotPassword() {
         this.validation.status = this.email != null &&
-                                 this.entity != null &&
-                                 !this.email.isEmpty() &&
-                                 !this.entity.isEmpty();
+                this.entity != null &&
+                !this.email.isEmpty() &&
+                !this.entity.isEmpty();
 
         if (!validation.status)
         {
@@ -101,7 +93,12 @@ public class Login {
         return "< email, entity >";
     }
 
+    private String requirementsForResetPassword() {
+        return "< id, oldPassword, newPassword, entity >";
+    }
+
     private static ProviderRepository providerRepository = new ProviderRepository(Provider.COLLECTION, Provider.class);
+
     private static StudentRepository studentRepository = new StudentRepository(Student.COLLECTION, Student.class);
 
     public Login makeForgotPassword() {
@@ -133,7 +130,7 @@ public class Login {
                         student.password = generatedPassword;
                         student.validation.status = true;
                         student.treatmentForUpdate()
-                               .update();
+                                .update();
                         this._id = student._id.toString();
                     }
                     else
@@ -151,7 +148,6 @@ public class Login {
         return this;
     }
 
-
     private void makeNotFound() {
         validation.notFound(email);
     }
@@ -159,7 +155,7 @@ public class Login {
     public Login genereteUrlForResetUpdade() {
         if (validAfterMakeUrl())
         {
-            this.url = this.email + "/" + this.generatedPassword;
+            this.url = this._id + "/" + this.generatedPassword;
         }
         return this;
     }
@@ -171,20 +167,22 @@ public class Login {
                 !this.generatedPassword.isEmpty();
     }
 
-
-    public Login validationForPasswordUpdade(String email, String password) {
-        this.email = email;
+    public Login validationForPasswordUpdade(String id, String password) {
+        this._id = id;
         this.oldPassword = password;
         this.validation.status = this.password != null &&
                                  this.entity != null &&
                                  this.oldPassword != null &&
-                                 this.email != null &&
+                                 this._id != null &&
                                  !this.password.isEmpty() &&
                                  !this.entity.isEmpty() &&
                                  !this.oldPassword.isEmpty() &&
-                                 !this.email.isEmpty();
+                                 !this._id.isEmpty();
 
-        if (! this.validation.status){throw new RuntimeException(CauseDescription.ERROR_DATA.get());}
+        if (!this.validation.status)
+        {
+            validation.fieldsError(requirementsForResetPassword());
+        }
         return this;
     }
 
@@ -194,35 +192,47 @@ public class Login {
             switch (entity)
             {
                 case Entity.PROVIDER:
-                    Provider provider = providerRepository.findByEmail(email);
+                    Provider provider = (Provider) providerRepository.readOne(this._id);
                     if (provider != null && validationOfOldPassword(provider.password))
                     {
-                        provider.password = this.password;
+                        provider.password = this.newPassword;
                         provider.validation.status = true;
                         provider.treatmentForUpdate()
                                 .update();
                     }
+                    else
+                    {
+                        makeNotConitainsOldPasswordValid();
+                    }
                     break;
                 case Entity.STUDENT:
-                    Student student = studentRepository.findByEmail(email);
+                    Student student = (Student) studentRepository.readOne(this._id);
                     if (student != null && validationOfOldPassword(student.password))
                     {
-                        student.password = this.password;
+                        student.password = this.newPassword;
                         student.validation.status = true;
                         student.treatmentForUpdate()
                                 .update();
+                    }
+                    else
+                    {
+                        makeNotConitainsOldPasswordValid();
                     }
                     break;
                 default:
                     validation.noContains(DetailsDescription.NOT_CONTAINS_ENTITY.get());
                     break;
             }
-
         }
         return this;
     }
 
+    private void makeNotConitainsOldPasswordValid() {
+        validation.noContains(DetailsDescription.NOT_OLD_PASSWORD.get());
+    }
+
     private boolean validationOfOldPassword(String password) {
-        return this.oldPassword.equals(password);
+        validation.status = EncryptionSHA.isPasswordValid(password, oldPassword);
+        return validation.status;
     }
 }

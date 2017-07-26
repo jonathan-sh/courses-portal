@@ -29,7 +29,7 @@ public class EncryptionSHA {
     }
 
 
-    public boolean isPasswordValid(String hashPassword, String password) {
+    public static boolean isPasswordValid(String hashPassword, String password) {
 
         MessageDigestPasswordEncoder digestPasswordEncoder = getInstanceMessageDisterPassword();
 

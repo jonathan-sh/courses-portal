@@ -9,7 +9,8 @@ public enum DetailsDescription {
     PASSWORD("you shall not pass"),
     ALREADY_EXISTS("A record already exists with this email : "),
     NOT_FOUND("Record not found with this email : "),
-    NOT_CONTAINS_ENTITY("Not contains entity valid");
+    NOT_CONTAINS_ENTITY("Not contains entity valid"),
+    NOT_OLD_PASSWORD("Not old password valid");
 
     private String description;
 
