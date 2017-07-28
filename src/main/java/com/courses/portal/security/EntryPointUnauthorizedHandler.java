@@ -16,7 +16,7 @@ public class EntryPointUnauthorizedHandler implements AuthenticationEntryPoint {
     public void commence(HttpServletRequest httpServletRequest,
                          HttpServletResponse httpServletResponse,
                          AuthenticationException e) throws IOException, ServletException {
-        httpServletResponse.sendError(404, e.getMessage());
+        httpServletResponse.sendError(501, e.getMessage());
     }
 
 }
