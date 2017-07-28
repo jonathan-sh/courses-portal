@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import javax.servlet.FilterChain;
@@ -30,12 +31,11 @@ public class AuthenticationTokenFilter extends UsernamePasswordAuthenticationFil
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
-        tokenUtils = WebApplicationContextUtils
-                .getRequiredWebApplicationContext(this.getServletContext())
-                .getBean(TokenUtils.class);
-        userDetailsService = WebApplicationContextUtils
-                .getRequiredWebApplicationContext(this.getServletContext())
-                .getBean(UserDetailsService.class);
+
+        tokenUtils = WebApplicationContextUtils.getRequiredWebApplicationContext(this.getServletContext())
+                                               .getBean(TokenUtils.class);
+        userDetailsService = WebApplicationContextUtils.getRequiredWebApplicationContext(this.getServletContext())
+                                                       .getBean(UserDetailsService.class);
 
         HttpServletResponse resp = (HttpServletResponse) response;
         resp.setHeader("Access-Control-Allow-Origin", "*");

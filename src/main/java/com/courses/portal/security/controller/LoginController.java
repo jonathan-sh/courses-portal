@@ -34,6 +34,12 @@ public class LoginController {
     @Autowired
     private UserDetailsService userDetailsService;
 
+
+    @RequestMapping(method = RequestMethod.GET)
+    public ResponseEntity<?> mimimiTest(){
+        return ResponseEntity.ok(true);
+    }
+
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<?> authenticationRequest(@RequestBody Login login)
             throws AuthenticationException {
