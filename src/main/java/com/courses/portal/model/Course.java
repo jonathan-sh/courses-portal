@@ -25,6 +25,8 @@ public class Course {
     @Expose
     public Object _id;
     @Expose
+    public Object id;
+    @Expose
     public String name;
     @Expose
     public String operation;
@@ -50,9 +52,7 @@ public class Course {
                                  this.operation != null &&
                                  this.objective != null &&
                                  this.hours != null &&
-                                 this.price != null &&
-                                 this.image != null &&
-                                 this.steps != null;
+                                 this.price != null;
 
         if (!this.validation.status)
         {
@@ -109,7 +109,9 @@ public class Course {
     public Course create() {
         if (validation.status)
         {
-            this.validation.httpStatus = HttpStatus.CREATED;
+           this.id = courseRepository.readAll().size()+1;
+           courseRepository.create(this);
+           this.validation.httpStatus = HttpStatus.CREATED;
         }
         return this;
     }

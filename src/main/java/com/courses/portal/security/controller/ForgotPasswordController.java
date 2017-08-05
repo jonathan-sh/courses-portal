@@ -1,7 +1,6 @@
 package com.courses.portal.security.controller;
 
 import com.courses.portal.security.model.Login;
-import org.bson.Document;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -36,7 +35,7 @@ public class ForgotPasswordController {
                                     @PathVariable String password)
     {
         login.validationForPasswordUpdade(id,password)
-             .makePasswordUpdade();
+             .makePasswordUpdate();
 
         if (login.validation.status)
         {

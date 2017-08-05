@@ -2,25 +2,27 @@ package com.courses.portal.model;
 
 import com.google.gson.annotations.Expose;
 
+import java.util.Map;
+
 /**
  * Created by jonathan on 7/15/17.
  */
 public class Question {
     @Expose
-    public String header;
+    public String statement;
     @Expose
-    public String[] alternatves;
+    public Map<String,String> alternatves;
     @Expose
-    public Integer correct;
+    public Character correct;
     @Expose
     public Image image;
     @Expose
     public Boolean status;
 
     public Boolean fieldValidationForCreation() {
-        return this.header != null &&
+        return this.statement != null &&
                 this.alternatves != null &&
-                this.alternatves.length == 5 &&
+                this.alternatves.size() == 5 &&
                 this.correct != null &&
                 this.status != null;
 

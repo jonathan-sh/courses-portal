@@ -1,13 +1,14 @@
 package com.courses.portal.security.controller;
 
 
+import com.courses.portal.model.Response;
 import com.courses.portal.security.constants.AppConstant;
 import com.courses.portal.security.TokenUtils;
 import com.courses.portal.security.model.Login;
 import com.courses.portal.security.model.SpringSecurityUser;
+import com.courses.portal.useful.constants.DetailsDescription;
 import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -48,7 +49,7 @@ public class LoginController {
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        return ResponseEntity.ok(getDocumentToken(login));
+        return ResponseEntity.ok(getResponse(login));
     }
 
     @RequestMapping(value = "/refresh", method = RequestMethod.GET)
@@ -86,10 +87,17 @@ public class LoginController {
                 new UsernamePasswordAuthenticationToken(login.getUserNameSpring(), login.getPassword()));
     }
 
-    private Document getDocumentToken(Login login) {
-        Document token = new Document();
-        token.put("token", this.tokenUtils.generateToken(login));
-        return token;
+    private Response getResponse(Login login) {
+        Response response = new Response();
+        if (login.validation.status != null && login.validation.status)
+        {
+            response.token = DetailsDescription.PASSWORD.get();
+            response.entity = login.validation;
+            return response;
+        }
+        response.token = this.tokenUtils.generateToken(login);
+        response.entity = login.getEntity();
+        return response;
     }
 
     private Document getDocumentRefreshToken(String token) {

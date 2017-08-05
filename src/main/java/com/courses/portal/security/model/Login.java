@@ -98,7 +98,6 @@ public class Login {
     }
 
     private static ProviderRepository providerRepository = new ProviderRepository(Provider.COLLECTION, Provider.class);
-
     private static StudentRepository studentRepository = new StudentRepository(Student.COLLECTION, Student.class);
 
     public Login makeForgotPassword() {
@@ -171,13 +170,13 @@ public class Login {
         this._id = id;
         this.oldPassword = password;
         this.validation.status = this.password != null &&
-                                 this.entity != null &&
-                                 this.oldPassword != null &&
-                                 this._id != null &&
-                                 !this.password.isEmpty() &&
-                                 !this.entity.isEmpty() &&
-                                 !this.oldPassword.isEmpty() &&
-                                 !this._id.isEmpty();
+                this.entity != null &&
+                this.oldPassword != null &&
+                this._id != null &&
+                !this.password.isEmpty() &&
+                !this.entity.isEmpty() &&
+                !this.oldPassword.isEmpty() &&
+                !this._id.isEmpty();
 
         if (!this.validation.status)
         {
@@ -186,7 +185,7 @@ public class Login {
         return this;
     }
 
-    public Login makePasswordUpdade() {
+    public Login makePasswordUpdate() {
         if (validation.status)
         {
             switch (entity)
@@ -202,7 +201,7 @@ public class Login {
                     }
                     else
                     {
-                        makeNotConitainsOldPasswordValid();
+                        makeNotContainsOldPasswordValid();
                     }
                     break;
                 case Entity.STUDENT:
@@ -216,7 +215,7 @@ public class Login {
                     }
                     else
                     {
-                        makeNotConitainsOldPasswordValid();
+                        makeNotContainsOldPasswordValid();
                     }
                     break;
                 default:
@@ -227,7 +226,7 @@ public class Login {
         return this;
     }
 
-    private void makeNotConitainsOldPasswordValid() {
+    private void makeNotContainsOldPasswordValid() {
         validation.noContains(DetailsDescription.NOT_OLD_PASSWORD.get());
     }
 
@@ -235,4 +234,28 @@ public class Login {
         validation.status = EncryptionSHA.isPasswordValid(password, oldPassword);
         return validation.status;
     }
+
+    public Object getEntity() {
+        switch (entity)
+        {
+            case Entity.PROVIDER:
+                 Provider provider = (Provider) providerRepository.readOne(this._id);
+                 provider.treatmentForResponse();
+                 return provider;
+
+            case Entity.STUDENT:
+                 Student student = (Student) studentRepository.readOne(this._id);
+                 student.treatmentForResponse();
+                 return student;
+
+            default:
+                validation.noContains(DetailsDescription.NOT_CONTAINS_ENTITY.get());
+                return this.validation;
+
+        }
+
+    }
+
+
 }
+

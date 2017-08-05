@@ -57,7 +57,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         switch (entity)
         {
             case Entity.PROVIDER:
-                Provider provider = this.providerRepository.findByEmail(email);
+                Provider provider = providerRepository.findByEmail(email);
                 if (provider != null && provider.isValid())
                 {
                     springSecurityUser = new SpringSecurityUser(provider._id,
@@ -71,7 +71,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
                 break;
             case Entity.STUDENT:
-                Student student = this.studentRepository.findByEmail(email);
+                Student student = studentRepository.findByEmail(email);
                 if (student!=null && student.isValid())
                 {
                     springSecurityUser = new SpringSecurityUser(student._id,
