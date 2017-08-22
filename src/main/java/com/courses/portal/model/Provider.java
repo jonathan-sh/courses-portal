@@ -1,6 +1,8 @@
 package com.courses.portal.model;
 
 import com.courses.portal.dao.ProviderRepository;
+import com.courses.portal.security.TokenUtils;
+import com.courses.portal.security.constants.AppConstant;
 import com.courses.portal.useful.encryptions.EncryptionSHA;
 import com.courses.portal.useful.constants.DetailsDescription;
 import com.courses.portal.useful.mongo.MongoHelper;
@@ -178,5 +180,14 @@ public class Provider {
     public boolean isValid() {
         fieldValidationForCreation();
         return this.validation.status && this.status;
+    }
+
+    public Provider get(String header) {
+        String email = new TokenUtils().getUsernameFromToken(header);
+        String user[] = email.split(AppConstant.REGEX);
+        Provider found = providerRepository.findByEmail(user[0]);
+        found.validation = validation.makeOK();
+        found.treatmentForResponse();
+        return found;
     }
 }

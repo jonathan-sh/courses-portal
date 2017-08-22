@@ -20,7 +20,7 @@ public class TokenUtils {
 
     private String secret = "courses.portal";
 
-    private Long expiration = 3000L;
+    private Long expiration = 30000L;
 
     public String getUsernameFromToken(String token) {
         String username;

@@ -43,4 +43,9 @@ public class Validation {
         this.httpStatus = httpStatus.NOT_ACCEPTABLE;
     }
 
+    public Validation makeOK() {
+        this.status = true;
+        this.httpStatus = httpStatus.OK;
+        return this;
+    }
 }

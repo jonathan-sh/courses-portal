@@ -1,11 +1,9 @@
 package com.courses.portal.controller;
 
 import com.courses.portal.model.Provider;
+import com.courses.portal.security.constants.AppConstant;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * Created by jonathan on 7/11/17.
@@ -17,6 +15,13 @@ public class ProviderCtrl {
 
 
     private Provider provider;
+
+    @RequestMapping(method = RequestMethod.GET)
+    public ResponseEntity<Object> find(@RequestHeader(AppConstant.TOKEN_HEADER) String header) {
+        this.provider = new Provider().get(header);
+        return makeResponse();
+
+    }
 
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<Object> create(@RequestBody Provider provider) {
