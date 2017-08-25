@@ -1,10 +1,9 @@
 package com.courses.portal.security.model;
 
+import com.courses.portal.dao.CourseRepository;
 import com.courses.portal.dao.ProviderRepository;
 import com.courses.portal.dao.StudentRepository;
-import com.courses.portal.model.Provider;
-import com.courses.portal.model.Student;
-import com.courses.portal.model.Validation;
+import com.courses.portal.model.*;
 import com.courses.portal.security.constants.AppConstant;
 import com.courses.portal.security.constants.Entity;
 import com.courses.portal.useful.constants.DetailsDescription;
@@ -13,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class Login {
     private static Logger logger = LoggerFactory.getLogger(Login.class);
@@ -239,9 +239,13 @@ public class Login {
         switch (entity)
         {
             case Entity.PROVIDER:
+
                  Provider provider = (Provider) providerRepository.readOne(this._id);
                  provider.treatmentForResponse();
-                 return provider;
+                 Response.ProviderCourse providerCourse = new Response() .new ProviderCourse();
+                 providerCourse.provider = provider;
+                 providerCourse.courses = new CourseRepository(Course.COLLECTION, Course.class).findAll();
+                 return providerCourse;
 
             case Entity.STUDENT:
                  Student student = (Student) studentRepository.readOne(this._id);

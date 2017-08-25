@@ -26,22 +26,19 @@ import javax.servlet.http.HttpServletRequest;
 @RequestMapping("/login")
 public class LoginController {
 
-    @Autowired
+
     private AuthenticationManager authenticationManager;
-
-    @Autowired
     private TokenUtils tokenUtils;
-
-    @Autowired
     private UserDetailsService userDetailsService;
 
-
-    @RequestMapping(method = RequestMethod.GET)
-    public ResponseEntity<?> mimimiTest(){
-        return ResponseEntity.ok(true);
+    @Autowired
+    public LoginController(AuthenticationManager authenticationManager, TokenUtils tokenUtils, UserDetailsService userDetailsService) {
+        this.authenticationManager = authenticationManager;
+        this.tokenUtils = tokenUtils;
+        this.userDetailsService = userDetailsService;
     }
 
-    @RequestMapping(method = RequestMethod.POST)
+   @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<?> authenticationRequest(@RequestBody Login login)
             throws AuthenticationException {
 
