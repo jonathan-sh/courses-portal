@@ -85,6 +85,7 @@ public class Provider {
 
     public Provider fieldValidationUpdate() {
         boolean premise = this._id != null;
+        validation.status = true;
         if (!premise)
         {
             this.validation.fieldsError(requirementsForUpdate());
