@@ -36,9 +36,9 @@ public class Provider {
     @Expose
     public String password;
     @Expose
-    public String description;
+    public String about;
     @Expose
-    public String header;
+    public List<Grade> grades;
     @Expose
     public List<Image> images;
     @Expose
