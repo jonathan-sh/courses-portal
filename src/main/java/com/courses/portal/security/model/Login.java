@@ -154,7 +154,7 @@ public class Login {
     public Login genereteUrlForResetUpdade() {
         if (validAfterMakeUrl())
         {
-            this.url = this._id + "/" + this.generatedPassword;
+            this.url = this.entity + "/" + this._id + "/" + this.generatedPassword;
         }
         return this;
     }

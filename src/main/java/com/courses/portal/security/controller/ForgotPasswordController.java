@@ -23,6 +23,7 @@ public class ForgotPasswordController {
         {
             //send email
             return new ResponseEntity<>(login, HttpStatus.OK);
+            //return new ResponseEntity<>("Email enviado", HttpStatus.OK);
         }
 
         return responseValidation(login);

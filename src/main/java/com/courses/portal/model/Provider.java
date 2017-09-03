@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -126,6 +127,10 @@ public class Provider {
         if (this.password != null)
         {
             this.password = DetailsDescription.PASSWORD.get();
+        }
+        if (this.grades == null)
+        {
+            this.grades = new ArrayList<>();
         }
         return this;
     }
