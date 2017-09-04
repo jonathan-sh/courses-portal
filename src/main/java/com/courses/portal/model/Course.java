@@ -49,10 +49,10 @@ public class Course {
 
     public Course fieldValidationForCreation() {
         this.validation.status = this.name != null &&
-                                 this.operation != null &&
-                                 this.objective != null &&
-                                 this.hours != null &&
-                                 this.price != null;
+                this.operation != null &&
+                this.objective != null &&
+                this.hours != null &&
+                this.price != null;
 
         if (!this.validation.status)
         {
@@ -77,8 +77,12 @@ public class Course {
     }
 
     public Course fieldValidationUpdate() {
+        this.validation.status = true;
         boolean premise = this._id != null;
-
+        if (this.steps != null)
+        {
+            steps = new Step().validEndPlusOrder(MongoHelper.treatsId(this._id), steps);
+        }
         if (!premise)
         {
             this.validation.fieldsError(requirementsForUpdate());
@@ -109,9 +113,9 @@ public class Course {
     public Course create() {
         if (validation.status)
         {
-           this.id = courseRepository.readAll().size()+1;
-           courseRepository.create(this);
-           this.validation.httpStatus = HttpStatus.CREATED;
+            this.id = courseRepository.readAll().size() + 1;
+            courseRepository.create(this);
+            this.validation.httpStatus = HttpStatus.CREATED;
         }
         return this;
     }

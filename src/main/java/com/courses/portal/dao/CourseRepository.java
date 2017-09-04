@@ -4,6 +4,7 @@ import com.courses.portal.dao.mongoDB.MongoCrud;
 import com.courses.portal.model.Course;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 /**
@@ -19,5 +20,14 @@ public class CourseRepository extends MongoCrud {
         List<Course> courses = super.readAll();
         courses.forEach(Course::treatmentForResponse);
         return courses;
+    }
+
+    public Course findById(String id) {
+        List<Course> courses = findAll();
+        Course course = courses.stream()
+                               .filter(item -> item._id.equals(id))
+                               .collect(Collectors.toList())
+                               .get(0);
+        return course;
     }
 }

@@ -15,15 +15,11 @@ public class Material {
     @Expose
     public String url;
     @Expose
+    public Boolean download;
+    @Expose
     public Boolean status;
 
-    public Boolean fieldValidationForCreation() {
-        return this.order != null &&
-                this.name != null &&
-                this.type != null &&
-                this.url != null &&
-                this.status != null;
-    }
+
 
 
 }
