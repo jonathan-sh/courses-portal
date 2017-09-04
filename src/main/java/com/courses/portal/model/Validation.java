@@ -48,4 +48,10 @@ public class Validation {
         this.httpStatus = httpStatus.OK;
         return this;
     }
+
+    public Validation notAcessible() {
+        this.status = false;
+        this.httpStatus = httpStatus.NOT_ACCEPTABLE;
+        return this;
+    }
 }

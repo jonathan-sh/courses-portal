@@ -24,10 +24,19 @@ public class CourseRepository extends MongoCrud {
 
     public Course findById(String id) {
         List<Course> courses = findAll();
-        Course course = courses.stream()
-                               .filter(item -> item._id.equals(id))
-                               .collect(Collectors.toList())
-                               .get(0);
+        Course course = new Course();
+        try
+        {
+            course = courses.stream()
+                    .filter(item -> item._id.equals(id))
+                    .collect(Collectors.toList())
+                    .get(0);
+        }
+        catch (Exception e)
+        {
+            System.out.println("findById" + this.getClass());
+            course = null;
+        }
         return course;
     }
 }
