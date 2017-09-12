@@ -41,6 +41,8 @@ public class Provider {
     @Expose
     public List<Grade> grades;
     @Expose
+    public List<ProviderTopic> topics;
+    @Expose
     public List<Image> images;
     @Expose
     public Boolean status;
