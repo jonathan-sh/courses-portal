@@ -37,7 +37,7 @@ public class Provider {
     @Expose
     public String password;
     @Expose
-    public String about;
+    public String welcome;
     @Expose
     public List<Grade> grades;
     @Expose

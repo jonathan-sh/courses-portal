@@ -90,6 +90,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
 
 
+
+
     private void splitEndValidationOfEmailEntity(String emailEndEntity) {
         String[] emailEntity = emailEndEntity.split(AppConstant.REGEX);
         this.isValidRequest = emailEntity.length == 2;
