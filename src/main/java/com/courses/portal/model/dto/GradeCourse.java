@@ -8,7 +8,7 @@ import java.util.List;
 
 public class GradeCourse {
     @Expose
-    public String grade;
+    public String description;
 
     @Expose
     public List<Course> courses = new ArrayList<Course>();

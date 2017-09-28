@@ -1,6 +1,5 @@
 package com.courses.portal.model;
 
-import com.courses.portal.controller.CourseCtrl;
 import com.courses.portal.dao.CourseRepository;
 import com.courses.portal.dao.ProviderRepository;
 import com.courses.portal.model.dto.GradeCourse;
@@ -8,6 +7,7 @@ import com.google.gson.annotations.Expose;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class HomeInformation {
 
@@ -40,12 +40,25 @@ public class HomeInformation {
 
         providers.get(0).grades.forEach(item->{
             GradeCourse gradeCourse = new GradeCourse();
-            gradeCourse.grade = item.description;
+            gradeCourse.description = item.description;
             grade.add(gradeCourse);
 
-            item.courses.forEach(id->gradeCourse.courses.add(courseRepository.findById(id)));
+            item.courses.forEach(id->{
+                Course course = courseRepository.findById(id);
+                if (course!=null && course.status)
+                {
+                    gradeCourse.courses.add(course);
+                }
+            });
 
         });
+
+
+        this.grade = this.grade
+                         .stream()
+                         .filter(item->item.courses.size()>0)
+                         .collect(Collectors.toList());
+
 
 
         return this;
