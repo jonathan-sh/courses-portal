@@ -1,5 +1,6 @@
-package com.courses.portal.model;
+package com.courses.portal.model.dto;
 
+import com.courses.portal.model.dto.DataHighchart;
 import com.google.gson.annotations.Expose;
 
 import java.util.ArrayList;

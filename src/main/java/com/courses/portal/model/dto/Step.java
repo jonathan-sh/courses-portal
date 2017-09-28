@@ -1,6 +1,7 @@
-package com.courses.portal.model;
+package com.courses.portal.model.dto;
 
 import com.courses.portal.dao.CourseRepository;
+import com.courses.portal.model.Course;
 import com.google.gson.annotations.Expose;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,20 +33,6 @@ public class Step {
 
     @Expose(serialize = false)
     private CourseRepository courseRepository = new CourseRepository(Course.COLLECTION, Course.class);
-
-    public Boolean fieldValidationForCreation() {
-
-        return this.order != null &&
-                this.name != null &&
-                this.materials != null &&
-                this.questions != null &&
-                this.exams != null &&
-                this.chances != null &&
-                this.materials.size() > 0 &&
-                this.questions.size() > 0 &&
-                this.exams.size() > 0;
-
-    }
 
     Integer count = 0;
     public List<Step> validEndPlusOrder(String id, List<Step> listSteps) {

@@ -1,4 +1,4 @@
-package com.courses.portal.model;
+package com.courses.portal.model.dto;
 
 import com.google.gson.annotations.Expose;
 
@@ -16,10 +16,5 @@ public class Exam {
     public Boolean random;
     @Expose
     public Boolean status;
-
-    public Boolean fieldValidationForCreation() {
-        return this.name != null &&
-               this.random != null;
-    }
 
 }

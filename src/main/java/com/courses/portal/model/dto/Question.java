@@ -1,5 +1,6 @@
-package com.courses.portal.model;
+package com.courses.portal.model.dto;
 
+import com.courses.portal.model.dto.Image;
 import com.google.gson.annotations.Expose;
 
 import java.util.Map;
@@ -18,14 +19,4 @@ public class Question {
     public Image image;
     @Expose
     public Boolean status;
-
-    public Boolean fieldValidationForCreation() {
-        return this.statement != null &&
-                this.alternatves != null &&
-                this.alternatves.size() == 5 &&
-                this.correct != null &&
-                this.status != null;
-
-    }
-
 }

@@ -1,6 +1,10 @@
 package com.courses.portal.model;
 
 import com.courses.portal.dao.ProviderRepository;
+import com.courses.portal.model.dto.Grade;
+import com.courses.portal.model.dto.Image;
+import com.courses.portal.model.dto.ProviderTopic;
+import com.courses.portal.model.dto.Validation;
 import com.courses.portal.security.TokenUtils;
 import com.courses.portal.security.constants.AppConstant;
 import com.courses.portal.useful.encryptions.EncryptionSHA;
@@ -39,9 +43,9 @@ public class Provider {
     @Expose
     public String welcome;
     @Expose
-    public List<Grade> grades;
+    public List<Grade> grades = new ArrayList<Grade>();
     @Expose
-    public List<ProviderTopic> topics;
+    public List<ProviderTopic> topics = new ArrayList<ProviderTopic>();
     @Expose
     public List<Image> images;
     @Expose

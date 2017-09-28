@@ -1,6 +1,7 @@
 package com.courses.portal.model;
 
 import com.courses.portal.dao.StudentRepository;
+import com.courses.portal.model.dto.Validation;
 import com.courses.portal.useful.encryptions.EncryptionSHA;
 import com.courses.portal.useful.constants.DetailsDescription;
 import com.courses.portal.useful.mongo.MongoHelper;
@@ -10,6 +11,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by jonathan on 7/16/17.
@@ -26,6 +30,10 @@ public class Student {
     public String email;
     @Expose
     public String password;
+    @Expose
+    public List<String> courses = new ArrayList<>();
+    @Expose
+    public Boolean subscriber;
     @Expose
     public String urlImage;
     @Expose

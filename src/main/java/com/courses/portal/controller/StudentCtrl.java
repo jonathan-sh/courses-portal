@@ -21,6 +21,7 @@ public class StudentCtrl {
     public ResponseEntity<Object> create(@RequestBody Student student) {
         this.student = student.fieldValidationForCreation()
                               .treatmentForCreate()
+                              .validationOfExistence()
                               .create()
                               .treatmentForResponse();
         return makeResponse();

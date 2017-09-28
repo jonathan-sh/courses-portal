@@ -1,4 +1,4 @@
-package com.courses.portal.model;
+package com.courses.portal.model.dto;
 
 import com.courses.portal.useful.constants.CauseDescription;
 import com.courses.portal.useful.constants.DetailsDescription;

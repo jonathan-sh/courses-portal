@@ -1,4 +1,7 @@
-package com.courses.portal.model;
+package com.courses.portal.model.dto;
+
+import com.courses.portal.model.Course;
+import com.courses.portal.model.Provider;
 
 import java.util.List;
 

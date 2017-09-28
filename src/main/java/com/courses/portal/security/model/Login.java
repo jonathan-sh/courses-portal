@@ -4,6 +4,8 @@ import com.courses.portal.dao.CourseRepository;
 import com.courses.portal.dao.ProviderRepository;
 import com.courses.portal.dao.StudentRepository;
 import com.courses.portal.model.*;
+import com.courses.portal.model.dto.Response;
+import com.courses.portal.model.dto.Validation;
 import com.courses.portal.security.constants.AppConstant;
 import com.courses.portal.security.constants.Entity;
 import com.courses.portal.useful.constants.DetailsDescription;
@@ -12,7 +14,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 public class Login {
     private static Logger logger = LoggerFactory.getLogger(Login.class);

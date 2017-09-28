@@ -1,4 +1,4 @@
-package com.courses.portal.model;
+package com.courses.portal.model.dto;
 
 import com.google.gson.annotations.Expose;
 

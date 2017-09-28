@@ -1,6 +1,7 @@
 package com.courses.portal.model;
 
 import com.courses.portal.dao.CourseRepository;
+import com.courses.portal.model.dto.*;
 import com.courses.portal.useful.mongo.MongoHelper;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.gson.annotations.Expose;
