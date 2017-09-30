@@ -1,6 +1,7 @@
 package com.courses.portal.controller;
 
 import com.courses.portal.model.Student;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,10 +13,16 @@ import org.springframework.web.bind.annotation.RestController;
  */
 
 @RestController
-@RequestMapping(value = "/student")
+@RequestMapping(path = "/student")
 public class StudentCtrl {
 
     private Student student = new Student();
+
+    @RequestMapping(path = "/signature",method = RequestMethod.GET)
+    public ResponseEntity<Object> getSignature() {
+        return new ResponseEntity<>(student.getSignatures(), HttpStatus.OK);
+
+    }
 
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<Object> create(@RequestBody Student student) {

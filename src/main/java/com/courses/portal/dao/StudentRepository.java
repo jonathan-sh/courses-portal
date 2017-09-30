@@ -18,6 +18,12 @@ public class StudentRepository extends MongoCrud {
 
     private static Logger logger = LoggerFactory.getLogger(StudentRepository.class);
 
+    public List<Student> findAll() {
+        List<Student> courses = super.readAll();
+        courses.forEach(Student::treatmentForResponse);
+        return courses;
+    }
+
     public Student findByEmail(String email) {
         Document query = new Document();
         query.append("email", email);

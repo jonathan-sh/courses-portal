@@ -7,6 +7,7 @@ import com.courses.portal.useful.constants.DetailsDescription;
 import com.courses.portal.useful.mongo.MongoHelper;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.gson.annotations.Expose;
+import org.bson.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -19,7 +20,8 @@ import java.util.List;
  * Created by jonathan on 7/16/17.
  */
 public class Student {
-
+    @JsonIgnore
+    @Expose(serialize = false)
     private static Logger logger = LoggerFactory.getLogger(Student.class);
 
     @Expose
@@ -33,7 +35,7 @@ public class Student {
     @Expose
     public List<String> courses = new ArrayList<>();
     @Expose
-    public Boolean subscriber;
+    public Boolean signature = false;
     @Expose
     public String urlImage;
     @Expose
@@ -50,10 +52,11 @@ public class Student {
     @Expose(serialize = false)
     public Validation validation = new Validation();
 
+    @JsonIgnore
     public String BCryptEncoderPassword() {
         return new BCryptPasswordEncoder().encode(this.password);
     }
-
+    @JsonIgnore
     public Student fieldValidationForCreation() {
         this.validation.status = this.name != null &&
                                  this.email != null &&
@@ -69,11 +72,11 @@ public class Student {
 
         return this;
     }
-
+    @JsonIgnore
     private String requirementsForCreation() {
         return "< name, email, password >";
     }
-
+    @JsonIgnore
     public Student treatmentForCreate() {
         if (validation.status)
         {
@@ -84,7 +87,7 @@ public class Student {
         }
         return this;
     }
-
+    @JsonIgnore
     public Student fieldValidationUpdate() {
         boolean premise = this._id != null;
 
@@ -98,11 +101,11 @@ public class Student {
         return this;
 
     }
-
+    @JsonIgnore
     private String requirementsForUpdate() {
         return "< _id >";
     }
-
+    @JsonIgnore
     public Student treatmentForUpdate() {
         this.email = null;
         if (this.password != null)
@@ -111,7 +114,7 @@ public class Student {
         }
         return this;
     }
-
+    @JsonIgnore
     public Student validationOfExistence() {
 
         if (validation.status)
@@ -125,7 +128,7 @@ public class Student {
 
         return this;
     }
-
+    @JsonIgnore
     public Student treatmentForResponse() {
         if (this._id != null)
         {
@@ -144,6 +147,7 @@ public class Student {
     @Expose(serialize = false)
     private StudentRepository studentRepository = new StudentRepository(COLLECTION, this.getClass());
 
+    @JsonIgnore
     public Student create() {
         boolean wasCreated = false;
         if (validation.status)
@@ -159,6 +163,7 @@ public class Student {
         return this;
     }
 
+    @JsonIgnore
     public Student update() {
         boolean wasUpdated = false;
         this._id = MongoHelper.treatsId(this._id);
@@ -188,9 +193,26 @@ public class Student {
         return this;
     }
 
+    @JsonIgnore
     public boolean isValid() {
         fieldValidationForCreation();
         return this.validation.status && this.status;
+    }
+
+    @JsonIgnore
+    public Object getSignatures() {
+        List<Document> signatures = new ArrayList<>();
+        studentRepository.findAll().forEach(item ->{
+            Document doc = new Document();
+            doc.put("_id",item._id);
+            doc.put("name",item.name);
+            doc.put("email",item.email);
+            doc.put("signature",item.signature);
+            doc.put("status",item.status);
+            signatures.add(doc);
+
+        });
+        return signatures;
     }
 }
 
