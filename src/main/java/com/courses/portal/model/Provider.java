@@ -106,6 +106,8 @@ public class Provider {
 
     public Provider treatmentForUpdate() {
         this.email = null;
+        this.grades = (this.grades.size()>0)? this.grades : null;
+        this.topics = (this.topics.size()>0)? this.topics : null;
         if (this.password != null)
         {
             this.password = EncryptionSHA.generateHash(this.password);
