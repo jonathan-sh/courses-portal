@@ -17,6 +17,8 @@ import java.util.List;
  */
 public class Course {
 
+    @JsonIgnore
+    @Expose(serialize = false)
     private static Logger logger = LoggerFactory.getLogger(Course.class);
 
     public Course() {
@@ -50,7 +52,7 @@ public class Course {
     @Expose(serialize = false)
     public Validation validation = new Validation();
 
-
+    @JsonIgnore
     public Course fieldValidationForCreation() {
         this.validation.status = this.name != null &&
                 this.description != null &&
@@ -66,11 +68,11 @@ public class Course {
         return this;
 
     }
-
+    @JsonIgnore
     private String requirementsForCreation() {
         return "< name, description, objective, hours, price, image, steps >";
     }
-
+    @JsonIgnore
     public Course treatmentForCreate() {
         if (validation.status)
         {
@@ -78,7 +80,7 @@ public class Course {
         }
         return this;
     }
-
+    @JsonIgnore
     public Course fieldValidationUpdate() {
         this.validation.status = true;
         boolean premise = this._id != null;
@@ -94,11 +96,11 @@ public class Course {
         return this;
 
     }
-
+    @JsonIgnore
     private String requirementsForUpdate() {
         return "< _id >";
     }
-
+    @JsonIgnore
     public Course treatmentForResponse() {
         if (this._id != null)
         {
@@ -112,7 +114,7 @@ public class Course {
     public static final String COLLECTION = "course";
     @Expose(serialize = false)
     private CourseRepository courseRepository = new CourseRepository(COLLECTION, this.getClass());
-
+    @JsonIgnore
     public Course create() {
         if (validation.status)
         {
@@ -122,13 +124,13 @@ public class Course {
         }
         return this;
     }
-
+    @JsonIgnore
     public List<Course> readAll() {
         List<Course> courses = (List<Course>) courseRepository.readAll();
         courses.forEach(Course::treatmentForResponse);
         return courses;
     }
-
+    @JsonIgnore
     public Course update() {
         boolean wasUpdated = false;
         if (validation.status)
@@ -156,7 +158,7 @@ public class Course {
         return this;
     }
 
-
+    @JsonIgnore
     public Course getInformationForHome(String id) {
         Course course = courseRepository.findById(id);
         if (course!=null)
@@ -189,7 +191,7 @@ public class Course {
 
         return course;
     }
-
+    @JsonIgnore
     public List<SerieHighchart> analitics(){
         SerieHighchart serieHighchart = new SerieHighchart();
         List<Course> allCouses = courseRepository.findAll();

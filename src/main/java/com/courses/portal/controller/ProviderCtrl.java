@@ -1,6 +1,7 @@
 package com.courses.portal.controller;
 
 import com.courses.portal.model.Provider;
+import com.courses.portal.model.SendEmail;
 import com.courses.portal.security.constants.AppConstant;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -32,6 +33,11 @@ public class ProviderCtrl {
                                 .treatmentForResponse();
         return makeResponse();
 
+    }
+
+    @RequestMapping(value = "/send-email",method = RequestMethod.POST)
+    public void create(@RequestBody SendEmail sendEmail) {
+       sendEmail.fieldValidationForSend().send();
     }
 
     @RequestMapping(method = RequestMethod.PUT)
