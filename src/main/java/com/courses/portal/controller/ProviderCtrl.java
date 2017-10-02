@@ -36,8 +36,9 @@ public class ProviderCtrl {
     }
 
     @RequestMapping(value = "/send-email",method = RequestMethod.POST)
-    public void create(@RequestBody SendEmail sendEmail) {
+    public boolean create(@RequestBody SendEmail sendEmail) {
        sendEmail.fieldValidationForSend().send();
+       return true;
     }
 
     @RequestMapping(method = RequestMethod.PUT)
