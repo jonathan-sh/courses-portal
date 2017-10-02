@@ -241,7 +241,7 @@ public class Login {
         {
             case Entity.PROVIDER:
 
-                 Provider provider = (Provider) providerRepository.readOne(this._id);
+                 Provider provider = providerRepository.findByEmail(this.email);
                  provider.treatmentForResponse();
                  Response.ProviderCourse providerCourse = new Response() .new ProviderCourse();
                  providerCourse.provider = provider;
@@ -249,7 +249,7 @@ public class Login {
                  return providerCourse;
 
             case Entity.STUDENT:
-                 Student student = (Student) studentRepository.readOne(this._id);
+                 Student student = studentRepository.findByEmail(this.email);
                  student.treatmentForResponse();
                  return student;
 
