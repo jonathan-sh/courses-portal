@@ -1,6 +1,15 @@
 server:
-    port: 4211
+    port: 4212
     compression:
       enabled: true
       mime-types: application/json,application/xml
       min-response-size: 50
+logging:
+  level:
+  com.courses.portal: ERROR
+  org.mongodb: ERROR
+  org.springframework: ERROR
+  pattern:
+    console: "%d{dd-MM-yyyy HH:mm:ss} - %msg%n"
+    file: "%d{dd-MM-yyyy HH:mm:ss} [%thread] %-5level %logger{35} - %msg%n"
+  file: log-file.log

@@ -6,7 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class CoursesPortalApiApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(CoursesPortalApiApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(CoursesPortalApiApplication.class, args);
+    }
 }

@@ -1,6 +1,6 @@
 package com.courses.portal.security.filter;
 
-import com.courses.portal.security.AppConstant;
+import com.courses.portal.security.constants.AppConstant;
 import com.courses.portal.security.TokenUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import javax.servlet.FilterChain;
@@ -30,22 +31,21 @@ public class AuthenticationTokenFilter extends UsernamePasswordAuthenticationFil
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
-        tokenUtils = WebApplicationContextUtils
-                .getRequiredWebApplicationContext(this.getServletContext())
-                .getBean(TokenUtils.class);
-        userDetailsService = WebApplicationContextUtils
-                .getRequiredWebApplicationContext(this.getServletContext())
-                .getBean(UserDetailsService.class);
+
+        tokenUtils = WebApplicationContextUtils.getRequiredWebApplicationContext(this.getServletContext())
+                                               .getBean(TokenUtils.class);
+        userDetailsService = WebApplicationContextUtils.getRequiredWebApplicationContext(this.getServletContext())
+                                                       .getBean(UserDetailsService.class);
 
         HttpServletResponse resp = (HttpServletResponse) response;
         resp.setHeader("Access-Control-Allow-Origin", "*");
-        resp.setHeader("Access-Control-Allow-Methods", "POST, GET, PUT, OPTIONS, DELETE, PATCH");
+        resp.setHeader("Access-Control-Allow-Credentials", "true");
+        resp.setHeader("Access-Control-Allow-Methods", "OPTIONS, GET, POST, PUT, DELETE,");
         resp.setHeader("Access-Control-Max-Age", "3600");
-        resp.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Accept-Encoding, Content-Encoding, " + AppConstant.tokenHeader);
-
+        resp.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Accept-Encoding, Content-Encoding, " + AppConstant.TOKEN_HEADER);
 
         HttpServletRequest httpRequest = (HttpServletRequest) request;
-        String authToken = httpRequest.getHeader(AppConstant.tokenHeader);
+        String authToken = httpRequest.getHeader(AppConstant.TOKEN_HEADER);
         String username = this.tokenUtils.getUsernameFromToken(authToken);
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null)

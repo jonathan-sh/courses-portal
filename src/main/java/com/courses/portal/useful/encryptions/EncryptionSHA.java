@@ -1,17 +1,17 @@
-package com.courses.portal.security;
+package com.courses.portal.useful.encryptions;
 
 import org.springframework.security.authentication.encoding.MessageDigestPasswordEncoder;
 
 /**
  * Created by jonathan on 3/19/17.
  */
-public class Encryption {
+public class EncryptionSHA {
 
     private static Object salt;
 
     private static MessageDigestPasswordEncoder getInstanceMessageDisterPassword() {
 
-        MessageDigestPasswordEncoder   digestPasswordEncoder = new MessageDigestPasswordEncoder("SHA-1");
+        MessageDigestPasswordEncoder digestPasswordEncoder = new MessageDigestPasswordEncoder("SHA-1");
 
         return digestPasswordEncoder;
 
@@ -29,7 +29,7 @@ public class Encryption {
     }
 
 
-    public  boolean isPasswordValid(String hashPassword, String password) {
+    public static boolean isPasswordValid(String hashPassword, String password) {
 
         MessageDigestPasswordEncoder digestPasswordEncoder = getInstanceMessageDisterPassword();
 

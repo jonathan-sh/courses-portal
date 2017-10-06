@@ -16,11 +16,11 @@ public class ReadTest {
     public static MockData mockData;
 
     @Test
-    public void readTest(){
-        List<MockData> result = new MongoCrud().readAll(MockData.COLLECTION,MockData.class);
-        Boolean status = result.size() >0;
+    public void readTest() {
+        List<MockData> result = new MongoCrud(MockData.COLLECTION, MockData.class).readAll();
+        Boolean status = result.size() > 0;
         mockData = result.get(0).treatsId();
-        assertEquals(true,status.booleanValue());
+        assertEquals(true, status.booleanValue());
 
     }
 }

@@ -7,24 +7,11 @@ import com.mongodb.MongoClient;
  */
 public class MongoConnectionFactory {
 
-    public MongoConnection getConetion(){
+    public MongoConnection getConetion() {
 
         MongoConnection mongoConnection = new MongoConnection();
-        mongoConnection.client = new MongoClient("localhost",27017 );
+        mongoConnection.client = new MongoClient("localhost", 27017);
         mongoConnection.database = mongoConnection.client.getDatabase("portal");
         return mongoConnection;
     }
-
-
-    public MongoConnection getDevConetion(){
-
-        MongoConnection mongoConnection = new MongoConnection();
-        mongoConnection.client = new MongoClient("localhost",27017 );
-        mongoConnection.database = mongoConnection.client.getDatabase("test");
-
-
-        return mongoConnection;
-
-    }
-
 }
