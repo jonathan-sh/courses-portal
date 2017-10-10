@@ -2,7 +2,9 @@ package com.courses.portal.dao;
 
 import com.courses.portal.dao.mongoDB.MongoCrud;
 import com.courses.portal.model.Student;
+import com.courses.portal.useful.mongo.MongoHelper;
 import org.bson.Document;
+import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,8 +29,19 @@ public class StudentRepository extends MongoCrud {
     public Student findByEmail(String email) {
         Document query = new Document();
         query.append("email", email);
+        return findOne(query, new Document());
+    }
+
+    public Student findById(String id) {
+        Document query = new Document();
+        ObjectId objectId = new ObjectId(MongoHelper.treatsId(id));
+        query.append("_id", objectId);
+        return findOne(query, new Document());
+    }
+
+    private Student findOne(Document query, Document sort){
         Student student = null;
-        List<Student> students = super.read(query, new Document(), 0);
+        List<Student> students = super.read(query, sort, 0);
         try
         {
             student = students.get(0);

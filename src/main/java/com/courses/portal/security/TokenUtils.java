@@ -2,6 +2,7 @@ package com.courses.portal.security;
 
 import com.courses.portal.security.model.Login;
 import com.courses.portal.security.model.SpringSecurityUser;
+import com.courses.portal.useful.mongo.MongoHelper;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -78,6 +79,20 @@ public class TokenUtils {
         return audience;
     }
 
+    public String getValueFronToken(String token, String key) {
+        String audience;
+        try
+        {
+            final Claims claims = this.getClaimsFromToken(token);
+            audience = (String) claims.get(key);
+        }
+        catch (Exception e)
+        {
+            audience = null;
+        }
+        return audience;
+    }
+
     private Claims getClaimsFromToken(String token) {
         Claims claims;
         try
@@ -116,9 +131,21 @@ public class TokenUtils {
         return (this.AUDIENCE_TABLET.equals(audience) || this.AUDIENCE_MOBILE.equals(audience));
     }
 
-    public String generateToken(Login Login) {
+    public String generateToken(Login login) {
         Map<String, Object> claims = new HashMap<String, Object>();
-        claims.put("sub", Login.getUserNameSpring());
+        claims.put("sub", login.getUserNameSpring());
+        claims.put("audience", "web");
+        claims.put("created", this.generateCurrentDate());
+        return this.generateToken(claims);
+    }
+
+
+
+    public String generateTokenForForgotPassword(Login login) {
+        Map<String, Object> claims = new HashMap<String, Object>();
+        claims.put("id", MongoHelper.treatsId(login._id));
+        claims.put("generatedPassword", login.generatedPassword);
+        claims.put("entity", login.entity);
         claims.put("audience", "web");
         claims.put("created", this.generateCurrentDate());
         return this.generateToken(claims);

@@ -3,55 +3,60 @@ package com.courses.portal.security.model;
 import com.courses.portal.dao.CourseRepository;
 import com.courses.portal.dao.ProviderRepository;
 import com.courses.portal.dao.StudentRepository;
-import com.courses.portal.model.*;
+import com.courses.portal.model.Course;
+import com.courses.portal.model.Provider;
+import com.courses.portal.model.Student;
 import com.courses.portal.model.dto.Response;
 import com.courses.portal.model.dto.Validation;
+import com.courses.portal.security.TokenUtils;
 import com.courses.portal.security.constants.AppConstant;
 import com.courses.portal.security.constants.Entity;
 import com.courses.portal.useful.constants.DetailsDescription;
 import com.courses.portal.useful.encryptions.EncryptionSHA;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.courses.portal.useful.mongo.MongoHelper;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.time.LocalDateTime;
 
 public class Login {
-    private static Logger logger = LoggerFactory.getLogger(Login.class);
-
+    /**
+     * Attributes
+     */
     private String oldPassword;
     private String password;
     private String newPassword;
-    private String email;
-    private String entity;
+    public String email;
+    public String entity;
+    @JsonIgnore
     public Validation validation = new Validation();
+    @JsonIgnore
     public String generatedPassword;
     public String _id;
     public String url;
 
 
+    /**
+     * Basic methods
+     */
     public Login() {
         super();
     }
-
     public Login(String email, String password, String entity) {
         this.setEmail(email);
         this.setPassword(password);
         this.setEntity(entity);
     }
-
     private void setEmail(String email) {
         this.email = email;
     }
-
     private void setPassword(String password) {
         this.newPassword = password;
         this.password = EncryptionSHA.generateHash(password);
     }
-
     private void setEntity(String entity) {
         this.entity = entity;
     }
-
+    @JsonIgnore
     public String getUserNameSpring() {
         if (!isValid())
         {
@@ -59,23 +64,48 @@ public class Login {
         }
         return this.email + AppConstant.REGEX + this.entity;
     }
-
     public String getEmail() {
         return email;
     }
-
     public String getPassword() {
         return password;
     }
-
     private boolean isValid() {
         return this.email != null &&
-                this.password != null &&
-                this.entity != null &&
-                !this.email.isEmpty() &&
-                !this.password.isEmpty() &&
-                !this.entity.isEmpty();
+               this.password != null &&
+               this.entity != null &&
+               !this.email.isEmpty() &&
+               !this.password.isEmpty() &&
+               !this.entity.isEmpty();
     }
+
+
+    /**
+     * Requirements
+     * @return
+     */
+
+    private String requirements() {
+        return "< email, entity >";
+    }
+    private String requirementsForResetPassword() {
+        return "< id, oldPassword, newPassword, entity >";
+    }
+
+    /**
+     * Data
+     */
+
+    private static ProviderRepository providerRepository = new ProviderRepository(Provider.COLLECTION, Provider.class);
+    private static StudentRepository studentRepository = new StudentRepository(Student.COLLECTION, Student.class);
+    private Provider provider;
+    private Student student;
+
+
+    /**
+     * Making forgot password
+     * @return
+     */
 
     public Login validForForgotPassword() {
         this.validation.status = this.email != null &&
@@ -90,54 +120,60 @@ public class Login {
         return this;
     }
 
-    private String requirements() {
-        return "< email, entity >";
-    }
-
-    private String requirementsForResetPassword() {
-        return "< id, oldPassword, newPassword, entity >";
-    }
-
-    private static ProviderRepository providerRepository = new ProviderRepository(Provider.COLLECTION, Provider.class);
-    private static StudentRepository studentRepository = new StudentRepository(Student.COLLECTION, Student.class);
-
-    public Login makeForgotPassword() {
-        this.generatedPassword = EncryptionSHA.generateHash(LocalDateTime.now().toString());
+    public Login validIfItsExistence() {
         if (validation.status)
         {
             switch (entity)
             {
                 case Entity.PROVIDER:
-                    Provider provider = providerRepository.findByEmail(email);
-                    if (provider != null)
+                    Provider provider = providerRepository.findByEmail(this.email);
+                    if (provider != null )
                     {
-                        provider.password = generatedPassword;
-                        provider.validation.status = true;
-                        provider.treatmentForUpdate()
-                                .update();
-                        this._id = provider._id.toString();
+                        this.provider = provider;
                     }
                     else
                     {
                         makeNotFound();
                     }
-
                     break;
                 case Entity.STUDENT:
-                    Student student = studentRepository.findByEmail(email);
+                    Student student = studentRepository.findByEmail(this.email);
                     if (student != null)
                     {
-                        student.password = generatedPassword;
-                        student.validation.status = true;
-                        student.treatmentForUpdate()
-                                .update();
-                        this._id = student._id.toString();
+                        this.student = student;
                     }
                     else
                     {
                         makeNotFound();
                     }
+                    break;
+                default:
+                    validation.noContains(DetailsDescription.NOT_CONTAINS_ENTITY.get());
+                    break;
+            }
+        }
+        return this;
+    }
 
+    public Login makeForgotPassword() {
+        generatePassword();
+        if (validation.status)
+        {
+            switch (entity)
+            {
+                case Entity.PROVIDER:
+                        this.provider.password = generatedPassword;
+                        this.provider.validation.status = true;
+                        this.provider.treatmentForUpdate()
+                                .update();
+                        this._id = MongoHelper.treatsId(provider._id);
+                        break;
+                case Entity.STUDENT:
+                        this.student.password = generatedPassword;
+                        this.student.validation.status = true;
+                        this.student.treatmentForUpdate()
+                                .update();
+                        this._id = student._id.toString();
                     break;
                 default:
                     validation.noContains(DetailsDescription.NOT_CONTAINS_ENTITY.get());
@@ -148,15 +184,12 @@ public class Login {
         return this;
     }
 
-    private void makeNotFound() {
-        validation.notFound(email);
-    }
-
-    public Login genereteUrlForResetUpdade() {
+    public Login generateUrlForResetUpdate(TokenUtils tokenUtils) {
         if (validAfterMakeUrl())
         {
-            this.url = this.entity + "/" + this._id + "/" + this.generatedPassword;
+            this.url = tokenUtils.generateTokenForForgotPassword(this);
         }
+
         return this;
     }
 
@@ -167,8 +200,21 @@ public class Login {
                 !this.generatedPassword.isEmpty();
     }
 
-    public Login validationForPasswordUpdade(String id, String password) {
+    private void generatePassword() {
+        this.generatedPassword = EncryptionSHA.generateHash(LocalDateTime.now().toString());
+    }
+
+    private void makeNotFound() {
+        validation.notFound(email);
+    }
+
+
+    /**
+     * Making update password
+     */
+    public Login validationForPasswordUpdate(String id, String password, String  entity) {
         this._id = id;
+        this.entity = entity;
         this.oldPassword = password;
         this.validation.status = this.password != null &&
                 this.entity != null &&
@@ -236,7 +282,13 @@ public class Login {
         return validation.status;
     }
 
-    public Object getEntity() {
+
+    /**
+     * Global methods
+     * @return
+     */
+    @JsonIgnore
+    public Object findEntity() {
         switch (entity)
         {
             case Entity.PROVIDER:
@@ -259,6 +311,12 @@ public class Login {
 
         }
 
+    }
+
+    @JsonIgnore
+    public Login treatsResponse() {
+        //this.password = DetailsDescription.PASSWORD.get();
+        return this;
     }
 
 
