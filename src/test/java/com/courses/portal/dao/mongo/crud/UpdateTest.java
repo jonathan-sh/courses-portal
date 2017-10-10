@@ -11,14 +11,14 @@ import static junit.framework.TestCase.assertEquals;
  */
 public class UpdateTest {
     @Test
-    public void updateTest(){
-      MongoCrud mongoCrud = new MongoCrud();
-      Boolean status =  mongoCrud.update(MockData.COLLECTION,ReadTest.mockData._id,new MockData().fillUpdateData());
-      if (status.booleanValue())
-      {
-         MockData mockData = (MockData) mongoCrud.readOne(MockData.COLLECTION,ReadTest.mockData._id,MockData.class);
-          assertEquals(MockData.NEW_NAME, mockData.name);
-      }
-      assertEquals(true, status.booleanValue());
-  }
+    public void updateTest() {
+        MongoCrud mongoCrud = new MongoCrud(MockData.COLLECTION, MockData.class);
+        Boolean status = mongoCrud.update(ReadTest.mockData._id, new MockData().fillUpdateData());
+        if (status.booleanValue())
+        {
+            MockData mockData = (MockData) mongoCrud.readOne(ReadTest.mockData._id);
+            assertEquals(MockData.NEW_NAME, mockData.name);
+        }
+        assertEquals(true, status.booleanValue());
+    }
 }

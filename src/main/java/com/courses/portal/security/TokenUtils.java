@@ -1,11 +1,14 @@
 package com.courses.portal.security;
 
+import com.courses.portal.security.model.Login;
 import com.courses.portal.security.model.SpringSecurityUser;
+import com.courses.portal.useful.mongo.MongoHelper;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
+
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -18,7 +21,7 @@ public class TokenUtils {
 
     private String secret = "courses.portal";
 
-    private Long expiration = 300L;
+    private Long expiration = 30000L;
 
     public String getUsernameFromToken(String token) {
         String username;
@@ -34,7 +37,7 @@ public class TokenUtils {
         return username;
     }
 
-    public Date getCreatedDateFromToken(String token) {
+    private Date getCreatedDateFromToken(String token) {
         Date created;
         try
         {
@@ -48,7 +51,7 @@ public class TokenUtils {
         return created;
     }
 
-    public Date getExpirationDateFromToken(String token) {
+    private Date getExpirationDateFromToken(String token) {
         Date expiration;
         try
         {
@@ -62,12 +65,26 @@ public class TokenUtils {
         return expiration;
     }
 
-    public String getAudienceFromToken(String token) {
+    private String getAudienceFromToken(String token) {
         String audience;
         try
         {
             final Claims claims = this.getClaimsFromToken(token);
             audience = (String) claims.get("audience");
+        }
+        catch (Exception e)
+        {
+            audience = null;
+        }
+        return audience;
+    }
+
+    public String getValueFronToken(String token, String key) {
+        String audience;
+        try
+        {
+            final Claims claims = this.getClaimsFromToken(token);
+            audience = (String) claims.get(key);
         }
         catch (Exception e)
         {
@@ -114,9 +131,21 @@ public class TokenUtils {
         return (this.AUDIENCE_TABLET.equals(audience) || this.AUDIENCE_MOBILE.equals(audience));
     }
 
-    public String generateToken(UserDetails userDetails) {
+    public String generateToken(Login login) {
         Map<String, Object> claims = new HashMap<String, Object>();
-        claims.put("sub", userDetails.getUsername());
+        claims.put("sub", login.getUserNameSpring());
+        claims.put("audience", "web");
+        claims.put("created", this.generateCurrentDate());
+        return this.generateToken(claims);
+    }
+
+
+
+    public String generateTokenForForgotPassword(Login login) {
+        Map<String, Object> claims = new HashMap<String, Object>();
+        claims.put("id", MongoHelper.treatsId(login._id));
+        claims.put("generatedPassword", login.generatedPassword);
+        claims.put("entity", login.entity);
         claims.put("audience", "web");
         claims.put("created", this.generateCurrentDate());
         return this.generateToken(claims);
@@ -159,5 +188,6 @@ public class TokenUtils {
                 && !(this.isTokenExpired(token))
                 && !(this.isCreatedBeforeLastPasswordReset(created, user.getLastPasswordReset())));
     }
+
 
 }
