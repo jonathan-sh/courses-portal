@@ -55,6 +55,7 @@ public class HomeInformation {
         {
             GradeCourse gradeCourse = new GradeCourse();
             gradeCourse.description = item.description;
+
             grade.add(gradeCourse);
 
             item.courses.forEach(id ->
@@ -67,8 +68,6 @@ public class HomeInformation {
             });
 
         });
-
-        removeNotActiveCouses();
 
     }
 

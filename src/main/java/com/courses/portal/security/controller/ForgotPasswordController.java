@@ -44,7 +44,7 @@ public class ForgotPasswordController {
     public ResponseEntity<?> update(@RequestHeader(value="Forgot-Password-Token") String token,
                                     @RequestBody Login login)
     {
-        String tokenId = tokenUtils.getValueFronToken(token,"id");
+        String tokenId = tokenUtils.getValueFronToken(token,"_id");
         String tokenPassword = tokenUtils.getValueFronToken(token,"generatedPassword");
         String tokenEntity = tokenUtils.getValueFronToken(token,"entity");
 

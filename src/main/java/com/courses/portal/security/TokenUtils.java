@@ -143,7 +143,7 @@ public class TokenUtils {
 
     public String generateTokenForForgotPassword(Login login) {
         Map<String, Object> claims = new HashMap<String, Object>();
-        claims.put("id", MongoHelper.treatsId(login._id));
+        claims.put("_id", MongoHelper.treatsId(login._id));
         claims.put("generatedPassword", login.generatedPassword);
         claims.put("entity", login.entity);
         claims.put("audience", "web");

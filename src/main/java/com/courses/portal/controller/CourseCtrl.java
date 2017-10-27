@@ -28,7 +28,7 @@ public class CourseCtrl {
 
     @RequestMapping(path = "/analytical",method = RequestMethod.GET)
     public ResponseEntity<Object> analytical() {
-        return new ResponseEntity<>(this.course.analitics(), HttpStatus.OK);
+        return new ResponseEntity<>(this.course.analytics(), HttpStatus.OK);
     }
 
     @RequestMapping(method = RequestMethod.POST)
@@ -47,6 +47,13 @@ public class CourseCtrl {
                             .update()
                             .treatmentForResponse();
         return makeResponse();
+
+    }
+
+    @RequestMapping(method = RequestMethod.DELETE)
+    public ResponseEntity<Object> delete(@RequestBody Course course) {
+
+        return new ResponseEntity<>(course.delete(), HttpStatus.OK);
 
     }
 

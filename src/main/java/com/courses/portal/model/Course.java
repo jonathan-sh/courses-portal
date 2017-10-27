@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by jonathan on 7/15/17.
@@ -84,10 +85,6 @@ public class Course {
     public Course fieldValidationUpdate() {
         this.validation.status = true;
         boolean premise = this._id != null;
-        if (this.steps != null)
-        {
-            steps = new Step().validEndPlusOrder(MongoHelper.treatsId(this._id), steps);
-        }
         if (!premise)
         {
             this.validation.fieldsError(requirementsForUpdate());
@@ -192,7 +189,7 @@ public class Course {
         return course;
     }
     @JsonIgnore
-    public List<SerieHighchart> analitics(){
+    public List<SerieHighchart> analytics(){
         SerieHighchart serieHighchart = new SerieHighchart();
         List<Course> allCouses = courseRepository.findAll();
         Double soma = allCouses.stream().mapToDouble(c->(c.views==null)?0:c.views).sum();
@@ -209,4 +206,16 @@ public class Course {
         return list;
 
     }
+    @JsonIgnore
+    public Boolean delete() {
+        return courseRepository.deleteOne(this._id);
+    }
+
+    @JsonIgnore
+    public Course updateRotine(){
+      return  this.fieldValidationUpdate()
+                  .update()
+                  .treatmentForResponse();
+    }
+
 }
