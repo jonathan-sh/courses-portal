@@ -48,4 +48,9 @@ public class ProviderRepository extends MongoCrud {
         return provider;
 
     }
+
+    public Provider getOne() {
+        List<Provider> providers = super.readAll();
+        return providers.get(0);
+    }
 }

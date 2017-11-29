@@ -1,10 +1,7 @@
 package com.courses.portal.model;
 
 import com.courses.portal.dao.ProviderRepository;
-import com.courses.portal.model.dto.Grade;
-import com.courses.portal.model.dto.Image;
-import com.courses.portal.model.dto.ProviderTopic;
-import com.courses.portal.model.dto.Validation;
+import com.courses.portal.model.dto.*;
 import com.courses.portal.security.TokenUtils;
 import com.courses.portal.security.constants.AppConstant;
 import com.courses.portal.useful.encryptions.EncryptionSHA;
@@ -42,6 +39,8 @@ public class Provider {
     public String password;
     @Expose
     public String welcome;
+    @Expose
+    public ConfigEmail configEmail;
     @Expose
     public List<Grade> grades = new ArrayList<Grade>();
     @Expose
@@ -108,7 +107,7 @@ public class Provider {
         this.email = null;
         this.grades = (this.grades.size()>0)? this.grades : null;
         this.topics = (this.topics.size()>0)? this.topics : null;
-        if (this.password != null)
+        if (this.password != null  && !this.password.isEmpty())
         {
             this.password = EncryptionSHA.generateHash(this.password);
         }

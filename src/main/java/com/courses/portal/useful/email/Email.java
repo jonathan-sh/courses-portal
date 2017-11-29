@@ -1,5 +1,6 @@
 package com.courses.portal.useful.email;
 
+import com.courses.portal.security.constants.AppConstant;
 import org.apache.commons.mail.DefaultAuthenticator;
 import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.HtmlEmail;
@@ -12,10 +13,15 @@ import java.net.MalformedURLException;
  */
 public class Email {
 
-    private static String HostName = "smtp.googlemail.com";
-    private static Integer SmtpPort = 587;
-    private static String EmailRemetente = "thedionisio.birl@gmail.com";
-    private static String Senha = "qnvaidaroq";
+//  private static String EmailRemetente = "thedionisio.birl@gmail.com";
+//  private static String Senha = "qnvaidaroq";
+//  private static String HostName = "smtp.googlemail.com";
+//  private static Integer SmtpPort = 587;
+
+    private static String EmailRemetente = AppConstant.SE_EMAIL;
+    private static String Senha = AppConstant.SE_PASSWORD;
+    private static String HostName = AppConstant.SE_HOSTNAME;
+    private static Integer SmtpPort = Integer.parseInt(AppConstant.SE_PORT);
 
     public static void sendSimpleEmail(String Destinatario, String Assunto, String TextoSimples) throws EmailException{
         SimpleEmail email = new SimpleEmail();
