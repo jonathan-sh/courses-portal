@@ -19,13 +19,17 @@ public class FileCtrl {
     }
 
     @PostMapping("/file")
-    public String handleFileUpload(@RequestParam("file") MultipartFile file,
-                                   RedirectAttributes redirectAttributes) {
+    public Boolean handleFileUpload(@RequestParam("file") MultipartFile file) {
 
-        storageService.store(file);
-        redirectAttributes.addFlashAttribute("message",
-                "You successfully uploaded " + file.getOriginalFilename() + "!");
+      try
+      {
+          storageService.store(file);
+          return true;
+      }
+      catch (Exception e)
+      {
+          return false;
+      }
 
-        return "redirect:/";
     }
 }
