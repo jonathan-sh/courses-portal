@@ -16,16 +16,23 @@ public class AppConstant {
 
     @Autowired
     public AppConstant() {
-        Provider provider =
-                new ProviderRepository(Provider.COLLECTION,Provider.class).getOne();
+       try
+       {
+           Provider provider =
+                   new ProviderRepository(Provider.COLLECTION,Provider.class).getOne();
 
-        if (provider!=null || provider.configEmail != null)
-        {
-            AppConstant.SE_EMAIL = provider.configEmail.email;
-            AppConstant.SE_PASSWORD = provider.configEmail.password;
-            AppConstant.SE_PORT = provider.configEmail.port;
-            AppConstant.SE_HOSTNAME = provider.configEmail.hostname;
+           if (provider!=null || provider.configEmail != null)
+           {
+               AppConstant.SE_EMAIL = provider.configEmail.email;
+               AppConstant.SE_PASSWORD = provider.configEmail.password;
+               AppConstant.SE_PORT = provider.configEmail.port;
+               AppConstant.SE_HOSTNAME = provider.configEmail.hostname;
 
-        }
+           }
+       }
+       catch (Exception e)
+       {
+           System.out.println("Não há email configurado.");
+       }
     }
 }
