@@ -15,7 +15,7 @@ public class ReadTest {
 
     public static MockData mockData;
 
-    @Test
+
     public void readTest() {
         List<MockData> result = new MongoCrud(MockData.COLLECTION, MockData.class).readAll();
         Boolean status = result.size() > 0;

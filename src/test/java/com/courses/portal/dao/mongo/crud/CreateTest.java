@@ -12,7 +12,7 @@ import static junit.framework.TestCase.assertEquals;
  * Created by jonathan on 7/14/17.
  */
 public class CreateTest {
-    @Test
+
     public void createTest() {
         MongoCrud mongoCrud = new MongoCrud(MockData.COLLECTION, MockData.class);
         Boolean status = mongoCrud.create(new MockData().fillCreateData());
